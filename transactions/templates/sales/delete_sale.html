@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %} Xóa Phiếu Bán Hàng {% endblock title %}
+
+{% block content %}
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <fieldset class="form-group">
+            <div style="color:#575757; font-weight: bold; font-size: 2.5rem; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 20px;">Xóa Phiếu Bán Hàng</div>
+            <h2 style="color:#575757; font-size: 1.5rem;">Bạn có chắc chắn muốn xóa phiếu bán hàng số: {{ object.so_phieu }}?</h2>
+        </fieldset>
+
+        <div class="form-group mt-4">
+            <button type="submit" class="btn btn-danger">Có, Xóa</button>
+            <a href="{% url 'phieu-ban' %}" class="btn btn-secondary">Hủy</a>
+        </div>
+
+    </form>
+
+{% endblock content %}

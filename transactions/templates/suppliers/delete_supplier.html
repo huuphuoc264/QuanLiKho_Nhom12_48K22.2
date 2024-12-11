@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %} Xóa Nhà Cung Cấp {% endblock title %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Tiêu đề chính -->
+        <fieldset class="form-group">
+            <div style="color:#575757; font-weight: bold; font-size: 2.5rem; border-bottom: 1px solid #ccc; margin-bottom: 20px;">
+                Xóa Nhà Cung Cấp
+            </div>
+            <h2 style="color:#575757; font-size: 1.5rem;">
+                Bạn có chắc chắn muốn xóa Nhà Cung Cấp "{{ object.ten }}" không?
+            </h2>
+        </fieldset>
+
+        <!-- Nút điều khiển -->
+        <div class="form-group mt-4">
+            <button type="submit" class="btn btn-danger">Có, Xóa</button>
+            <a href="{% url 'danh-sach-nha-cung-cap' %}" class="btn btn-secondary">Hủy Bỏ</a>
+        </div>
+    </form>
+{% endblock content %}

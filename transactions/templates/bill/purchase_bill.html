@@ -1,0 +1,125 @@
+{% extends bill_base %}
+{% load static %}
+
+{% block title %}
+    Phiếu Nhập Kho Số: {{ phieu.so_phieu }}
+{% endblock title %}
+
+{% block content %}
+
+<!-- Tiêu đề chính -->
+<div style="color:#575757; font-weight: bold; font-size: 2.5rem; border-bottom: 2px solid #ccc; text-align: center; margin: 20px 0; padding-bottom: 10px;">
+    PHIẾU NHẬP KHO SỐ: {{ phieu.so_phieu }}
+</div>
+
+<form method="post">
+    {% csrf_token %}  <!-- Token bảo mật cho form, để tránh tấn công CSRF -->
+
+    <div class="bg" style="padding: 20px;">
+        <div id="printArea" class="bg" style="padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+
+            <!-- Thông tin công ty -->
+            <table style="width: 100%; margin: 0 auto; border-collapse: collapse;">
+                <tbody>
+                    <tr>
+                        <td style="text-align: center; font-size: 1.5rem; font-weight: bold; padding: 10px 0;">
+                            CỬA HÀNG VINAMILK ĐÀ NẴNG
+                        </td>
+                    </tr>
+                    <tr style="text-align: center;">
+                        <td style="padding: 15px 0;">
+                            <span style="font-size: 2rem; font-weight: bold;">PHIẾU NHẬP KHO</span> <br>
+                            <span style="font-size: 1.2rem; font-weight: bold;">KINH DOANH: Sản phẩm</span> <br>
+                            <span style="font-weight: bold;">ĐỊA CHỈ ĐĂNG KÝ:</span> 71 Ngũ Hành Sơn, TP Đà Nẵng <br>
+                            <span style="font-weight: bold;">EMAIL: </span> kinhdoanh@company.com <br><br>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Thông tin nhà cung cấp và hóa đơn -->
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                <tbody>
+                    <tr>
+                        <td style="width: 50%; padding: 10px; border: 1px solid #ccc; font-weight: bold;">TÊN NHÀ CUNG CẤP</td>
+                        <td style="width: 25%; padding: 10px; border: 1px solid #ccc; font-weight: bold;">SỐ PHIẾU</td>
+                        <td style="width: 25%; padding: 10px; border: 1px solid #ccc;">{{ phieu.so_phieu }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ccc;">{{ phieu.nha_cung_cap.ten }}</td>
+                        <td style="padding: 10px; border: 1px solid #ccc; font-weight: bold;">NGÀY</td>
+                        <td style="padding: 10px; border: 1px solid #ccc;">{{ phieu.thoi_gian|date:"d/m/Y" }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ccc;" colspan="3">{{ phieu.nha_cung_cap.dia_chi|linebreaks }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Bảng chi tiết hàng hóa -->
+<table style="width: 100%; border-collapse: collapse; margin: 20px 0; border: 1px solid #ccc;">
+    <thead>
+        <tr style="background-color: #f8f8f8;">
+            <th style="padding: 10px; border: 1px solid #ccc; text-align: center; font-weight: bold;">STT</th>
+            <th style="padding: 10px; border: 1px solid #ccc; text-align: center; font-weight: bold;">TÊN HÀNG</th>
+            <th style="padding: 10px; border: 1px solid #ccc; text-align: center; font-weight: bold;">SỐ LƯỢNG</th>
+            <th style="padding: 10px; border: 1px solid #ccc; text-align: center; font-weight: bold;">ĐƠN GIÁ</th>
+            <th style="padding: 10px; border: 1px solid #ccc; text-align: center; font-weight: bold;">CHIẾT KHẤU %</th>
+            <th style="padding: 10px; border: 1px solid #ccc; text-align: center; font-weight: bold;">HẠN SỬ DỤNG</th>
+            <th style="padding: 10px; border: 1px solid #ccc; text-align: center; font-weight: bold;">THÀNH TIỀN</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in sanpham_list %}
+        <tr>
+            <!-- Số thứ tự của sản phẩm -->
+            <td style="padding: 10px; border: 1px solid #ccc; text-align: center;">{{ forloop.counter }}</td>
+            <!-- Tên sản phẩm từ thông tin tồn kho -->
+            <td style="padding: 10px; border: 1px solid #ccc;">{{ item.ton_kho.ten }}</td>
+            <!-- Số lượng sản phẩm nhập -->
+            <td style="padding: 10px; border: 1px solid #ccc; text-align: center;">{{ item.so_luong }}</td>
+            <!-- Đơn giá của sản phẩm -->
+            <td style="padding: 10px; border: 1px solid #ccc; text-align: center;">{{ item.don_gia|floatformat:0 }}</td>
+            <!-- Chiết khấu phần trăm của sản phẩm -->
+            <td style="padding: 10px; border: 1px solid #ccc; text-align: center;">{{ item.phan_tram_chiet_khau }}</td>
+            <!-- Hạn Sử Dụng -->
+            <td style="padding: 10px; border: 1px solid #ccc; text-align: center;">{{ item.han_su_dung|date:"d/m/Y" }}</td>
+            <!-- Thành tiền của sản phẩm, có tính chiết khấu -->
+            <td style="padding: 10px; border: 1px solid #ccc; text-align: center;">{{ item.thanh_tien|floatformat:0 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+            <!-- Ký tên -->
+            <div style="text-align: right; margin-top: 50px; padding-right: 30px;">
+                <span style="font-weight: bold;">THAY MẶT CÔNG TY <br><br><br><br></span>
+                <span style="padding-right: 60px; font-weight: bold;">Chữ Ký</span>
+            </div>
+        </div>
+    </div>
+
+    <br><br>
+
+    <!-- Các nút điều khiển -->
+    <div class="wrapper" style="text-align: center;">
+        <!-- Nút in phiếu -->
+        <button class="btn btn-primary" style="margin-right: 10px;" onclick="printpage('printArea')">In Phiếu</button>
+        <!-- Nút quay lại trang danh sách phiếu nhập -->
+        <a href="{% url 'phieu-nhap' %}" class="btn btn-secondary">Quay Lại</a>
+    </div>
+</form>
+
+<script>
+    // Hàm in phiếu khi nhấn nút "In Phiếu"
+    function printpage(divName) {
+        var printContents = document.getElementById(divName).innerHTML;  // Lấy nội dung trong phần tử có id là 'printArea'
+        var originalContents = document.body.innerHTML;  // Lưu lại nội dung gốc của trang
+        document.body.innerHTML = printContents;  // Thay nội dung trang bằng nội dung cần in
+        window.print();  // Gọi chức năng in của trình duyệt
+        document.body.innerHTML = originalContents;  // Khôi phục lại nội dung gốc của trang
+    }
+</script>
+
+{% endblock %}

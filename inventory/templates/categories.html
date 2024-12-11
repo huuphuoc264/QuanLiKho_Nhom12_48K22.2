@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %} Danh Sách Danh Mục {% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Tiêu đề chính và nút "Thêm Danh Mục Mới" -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-8">
+            <h2 class="page-title">Danh Sách Danh Mục</h2>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+            <!-- Ensure button alignment and spacing -->
+            <a class="custom-btn-next btn-sm" href="{% url 'danhmuc-them-moi' %}">
+                <i class="fas fa-plus-circle"></i> Thêm Danh Mục Mới
+            </a>
+        </div>
+    </div>
+
+    <!-- Bảng Danh Sách Danh Mục -->
+    <div class="table-responsive">
+        <table class="table table-css table-hover table-bordered">
+            <thead class="thead-dark align-middle">
+                <tr>
+                    <th class="text-center">Tên Danh Mục</th>
+                    <th class="text-center">Mô Tả</th>
+                    <th class="text-center">Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if danh_muc_list %}
+                    {% for danh_muc in danh_muc_list %}
+                    <tr>
+                        <!-- Sửa đổi liên kết tên danh mục để điều hướng đến chi tiết -->
+                        <td class="align-middle">
+                            <a href="{% url 'danhmuc-chi-tiet' danh_muc.pk %}" class="text-decoration-none text-primary">
+                                {{ danh_muc.ten }}
+                            </a>
+                        </td>
+                        <td class="align-middle">{{ danh_muc.mo_ta }}</td>
+                        <td class="align-middle text-center">
+                            <div class="button-spacing d-flex justify-content-center gap-2">
+                                <a href="{% url 'danhmuc-chinh-sua' danh_muc.pk %}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-edit"></i> Chỉnh Sửa
+                                </a>
+                                <a href="{% url 'danhmuc-xoa' danh_muc.pk %}" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i> Xóa
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center" style="font-weight: bold;">Không có danh mục nào trong hệ thống. Hãy thêm danh mục mới.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

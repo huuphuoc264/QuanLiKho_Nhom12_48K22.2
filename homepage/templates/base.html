@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<style>
+.logo-container {
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.logo {
+    width: 120px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+</style>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/bootstrap.min.css' %}">
+
+    <!-- font awesome cdn -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+    <!-- Main CSS, then Sidebar CSS and Dialog Box CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">    
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}">    
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dialogbox.css' %}">    
+
+    <title>{% block title %}Title Missing{% endblock title %}</title>
+
+</head>
+<body>
+
+    <!-- Dialog Box CSS  -->
+    <div id="dialogoverlay"></div>
+    <div id="dialogbox">
+        <div class="align-middle">
+            <div id="dialogboxhead"></div>
+            <div id="dialogboxbody"></div>
+            <div id="dialogboxfoot"></div>
+        </div>
+    </div>
+
+    <main id="wrapper">
+    
+    {% if user.is_authenticated %}
+    
+        <nav id="sidebar">
+            
+            <div class="sidebar-header" style="padding: 0 0; text-align: center;">
+                <a class="navbar-brand title mr-4" href="{% url 'trang-chu' %}">
+                    <img src="{% static 'image/logo.png' %}" alt="Logo" class="logo">
+                </a>
+            </div>
+
+            <ul class="list-unstyled sidebar-components">
+                <li> 
+                    <a class="sidebar-text sidebar-button" href="{% url 'trang-chu' %}">
+                        <i class="fas fa-home"></i> Trang Chủ
+                    </a>
+                </li>               
+                
+                <!-- Quản Lí Kho Hàng -->
+                <li>
+                    <a href="#inventorySubmenu" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button">
+                        <i class="fas fa-boxes"></i> Quản Lí Kho Hàng
+                    </a>
+                    <ul class="collapse list-unstyled" id="inventorySubmenu">
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'tonkho-them-moi' %}"><i class="fas fa-plus-circle"></i> Thêm mới</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'tonkho' %}"><i class="fas fa-list"></i> Danh sách hàng hóa</a> </li>
+                    </ul>
+                </li>
+                <!-- Quản Lí Danh Mục -->
+                <li>
+                    <a href="#categorySubmenu" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button">
+                        <i class="fas fa-list-alt"></i> Quản Lí Danh Mục
+                    </a>
+                    <ul class="collapse list-unstyled" id="categorySubmenu">
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'danhmuc-them-moi' %}"><i class="fas fa-plus-circle"></i> Thêm danh mục mới</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'danhmuc' %}"><i class="fas fa-list"></i> Danh sách danh mục</a> </li>
+                    </ul>
+                </li>
+                <!-- Quản Lí Nhập Kho -->
+                <li>
+                    <a href="#purchaseSubmenu" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button">
+                        <i class="fas fa-cash-register"></i> Quản Lí Nhập Kho
+                    </a>
+                    <ul class="collapse list-unstyled" id="purchaseSubmenu">
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'chon-nhacungcap' %}"><i class="fas fa-plus-circle"></i> Nhập kho mới</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'phieu-nhap' %}"><i class="fas fa-list"></i> Danh sách nhập kho</a> </li>
+                    </ul>
+                </li>
+
+                <!-- Quản Lí Xuất Kho -->
+                <li>
+                    <a href="#saleSubmenu" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button">
+                        <i class="fas fa-dolly"></i> Quản Lí Xuất Kho
+                    </a>
+                    <ul class="collapse list-unstyled" id="saleSubmenu">
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'phieu-ban-moi' %}"><i class="fas fa-plus-circle"></i> Xuất kho mới</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'phieu-ban' %}"><i class="fas fa-list"></i> Danh sách xuất kho</a> </li>
+                    </ul>
+                </li>
+
+                <!-- Quản Lí Nhà Cung Cấp -->
+                <li>
+                    <a href="#supplierSubmenu" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button">
+                        <i class="fas fa-dolly-flatbed"></i> Quản Lí Nhà Cung Cấp
+                    </a>
+                    <ul class="collapse list-unstyled" id="supplierSubmenu">
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'nhacungcap-them-moi' %}"><i class="fas fa-plus-circle"></i> Thêm mới nhà cung cấp</a> </li>
+                        <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'danh-sach-nha-cung-cap' %}"><i class="fas fa-list"></i> Danh sách nhà cung cấp</a> </li>
+                    </ul>
+                </li>
+            
+
+                <!-- User -->
+                <li class="bottomleft">
+                    <a href="#UserSubmenu" data-toggle="collapse" class="dropdown-toggle sidebar-text right-arrow sidebar-button">
+                        <i class="fas fa-user-circle"></i> {{ request.user.username }}
+                    </a>
+                    <ul class="collapse list-unstyled" id="UserSubmenu">
+                        {% if request.user.is_superuser %}
+                            <li> <a class="sidebar-text sidebar-subitem sidebar-button" href="{% url 'admin:index' %}"><i class="fas fa-user-shield"></i> Trang Admin</a> </li>
+                        {% endif %}
+                        <li>
+                            <a href="{% url 'logout' %}" class="sidebar-text sidebar-subitem sidebar-button logout-button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fas fa-sign-out-alt"></i> Đăng Xuất
+                            </a>
+                            <form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: none;">
+                                {% csrf_token %}
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    
+        <div id="content">
+
+            <div class="row">
+                <div class="col-md-12">
+                
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}"> {{ message }} </div>
+                        {% endfor %}
+                    {% endif %}
+                
+    {% endif %} 
+
+                    <div class="container">
+                        {% block content %}{% endblock content %}
+                    </div>
+                    
+                </div>
+            </div>
+            <br>
+
+        </div>
+    
+    </main>    
+    
+    <script src="{% static 'bootstrap/jquery-3.3.1.slim.min.js' %}"></script>
+    <script src="{% static 'bootstrap/popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap/bootstrap.min.js' %}"></script>
+
+</body>
+</html>

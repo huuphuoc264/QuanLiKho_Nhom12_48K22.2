@@ -1,0 +1,68 @@
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/bootstrap.min.css' %}">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">    
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}">    
+    
+    <title>IMS - Đăng Xuất</title>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .logout-card {
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .logout-title {
+            color: #607d8b;
+            font-weight: bold;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="logout-card">
+        <h2 class="logout-title">Quản Lí Kho Hàng Vinamilk</h2>
+
+        <p class="text-muted" style="font-size: 1.25rem;">Bạn đã đăng xuất thành công! Cảm ơn bạn đã sử dụng hệ thống.</p>
+        
+        <div class="mt-4">
+            <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg">Đăng Nhập Lại</a>
+        </div>
+    </div>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'bootstrap/jquery-3.3.1.slim.min.js' %}"></script>
+    <script src="{% static 'bootstrap/popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap/bootstrap.min.js' %}"></script>
+
+</body>
+
+</html>

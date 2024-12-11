@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}  <!-- Tải thư viện widget_tweaks để có thể sử dụng các filter như 'add_class' trong form -->
+
+{% block title %} Phiếu Nhập Mới {% endblock title %}
+
+{% block content %}
+
+<div class="container mt-4" style="max-width: 1100px;">
+    <!-- Khởi tạo một div chứa với các class Bootstrap và giới hạn chiều rộng của nó -->
+
+    <div class="text-center mb-4">
+        <!-- Div này căn giữa tiêu đề trang -->
+        <h2 class="page-title" style="font-size: 2rem;">Phiếu Nhập Mới</h2>
+        <!-- Tiêu đề "Phiếu Nhập Mới" có font-size là 2rem -->
+    </div>
+
+    <div class="card shadow-sm p-3 mb-4" style="border-radius: 8px;">
+        <!-- Div này tạo một thẻ card với bóng đổ và padding xung quanh nội dung -->
+
+        <!-- Thông tin nhà cung cấp -->
+        <div class="content-section mb-4">
+            <h5 class="text-primary mb-3" style="font-size: 1.4rem;">Thông Tin Nhà Cung Cấp</h5>
+            <!-- Tiêu đề nhỏ cho phần thông tin nhà cung cấp, có màu chữ là 'text-primary' và kích thước font 1.4rem -->
+
+            <div class="form-group mb-3">
+                <!-- Form để nhập tên nhà cung cấp -->
+                <label for="id_name" class="form-label" style="font-size: 1rem;">Tên Nhà Cung Cấp:</label>
+                <!-- Label cho trường 'Tên Nhà Cung Cấp' -->
+                <input type="text" class="form-control form-control-md" id="id_name" value="{{ nhacungcap.ten }}" disabled>
+                <!-- Trường nhập tên nhà cung cấp, giá trị được điền sẵn từ dữ liệu 'nhacungcap.ten', và trường này bị vô hiệu hóa -->
+            </div>
+
+            <div class="form-row">
+                <!-- Dòng form chứa các trường số điện thoại và email -->
+                <div class="form-group col-md-6 mb-3">
+                    <label for="id_phone" class="form-label" style="font-size: 1rem;">Số Điện Thoại:</label>
+                    <!-- Label cho trường số điện thoại -->
+                    <input type="text" class="form-control form-control-md" id="id_phone" value="{{ nhacungcap.so_dien_thoai }}" disabled>
+                    <!-- Trường nhập số điện thoại, giá trị điền sẵn và bị vô hiệu hóa -->
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="id_email" class="form-label" style="font-size: 1rem;">Email:</label>
+                    <!-- Label cho trường email -->
+                    <input type="email" class="form-control form-control-md" id="id_email" value="{{ nhacungcap.email }}" disabled>
+                    <!-- Trường nhập email, giá trị điền sẵn và bị vô hiệu hóa -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Form chi tiết sản phẩm -->
+        <form method="post">
+            {% csrf_token %}  <!-- CSRF token để bảo vệ form khỏi các cuộc tấn công CSRF -->
+            {{ formset.management_form }}  <!-- Hiển thị các formset quản lý (bao gồm thông tin về số lượng các form hiện tại) -->
+
+            <div class="content-section mb-4">
+                <h5 class="text-primary mb-3" style="font-size: 1.4rem;">Thông tin hàng hóa</h5>
+                <!-- Tiêu đề phần Chi Tiết Sản Phẩm -->
+
+                <div class="table-responsive">
+                    <!-- Table chứa chi tiết các sản phẩm -->
+                    <table class="table table-css table-hover table-bordered">
+                        <thead class="thead-dark">
+                            <!-- Đầu bảng với các cột -->
+                            <tr>
+                                <th class="text-center" style="font-size: 1rem;">Tên Hàng</th>
+                                <th class="text-center" style="font-size: 1rem;">Đơn Giá</th>
+                                <th class="text-center" style="font-size: 1rem;">Số Lượng</th>
+                                <th class="text-center" style="font-size: 1rem;">Chiết Khấu %</th>
+                                <th class="text-center" style="font-size: 1rem;">Hạn Sử Dụng</th>
+                                <th class="text-center" style="font-size: 1rem;">Thành Tiền</th>
+                                <th class="text-center" style="font-size: 1rem;">Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-rows">
+                            <!-- Các dòng sản phẩm sẽ được thêm vào đây -->
+                            {% for form in formset %}
+                            <tr class="product-entry-row">
+                                <!-- Mỗi dòng tương ứng với một sản phẩm trong formset -->
+                                <td>{{ form.ton_kho|add_class:"form-control form-control-md" }}</td>
+                                <!-- Tên sản phẩm, sử dụng filter 'add_class' để thêm class CSS cho trường -->
+                                <td>{{ form.don_gia|add_class:"form-control form-control-md price" }}</td>
+                                <!-- Đơn giá, thêm class 'price' -->
+                                <td>{{ form.so_luong|add_class:"form-control form-control-md quantity" }}</td>
+                                <!-- Số lượng, thêm class 'quantity' -->
+                                <td>{{ form.phan_tram_chiet_khau|add_class:"form-control form-control-md discount" }}</td>
+                                <!-- Chiết khấu, thêm class 'discount' -->
+                                <td>{{ form.han_su_dung|add_class:"form-control form-control-md" }}</td>
+                                <td>
+                                    <input type="hidden" name="{{ form.thanh_tien.html_name }}" value="{{ form.thanh_tien.value|default_if_none:"0" }}">
+                                    <!-- Lưu giá trị thành tiền trong input hidden -->
+                                    <input type="text" class="form-control form-control-md totalprice" value="{{ form.thanh_tien.value|default_if_none:"0" }}" disabled>
+                                    <!-- Trường thành tiền, chỉ đọc -->
+                                </td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-danger btn-md remove-form-row">Xóa</button>
+                                    <!-- Nút xóa dòng sản phẩm -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-end mt-2">
+                    <!-- Nút thêm sản phẩm -->
+                    <button type="button" class="btn btn-outline-primary btn-md add-form-row">+ Thêm Sản Phẩm</button>
+                </div>
+            </div>
+
+            <!-- Nút điều khiển dưới cùng -->
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <button type="submit" class="custom-btn-next" style="font-size: 1rem;">Thêm Vào Phiếu Nhập <i class="fas fa-save"></i></button>
+                <!-- Nút submit để thêm vào phiếu nhập -->
+                <a href="{% url 'phieu-nhap' %}" class="btn btn-outline-danger btn-md" style="font-size: 1rem;">Hủy <i class="fas fa-times"></i></a>
+                <!-- Nút hủy để quay lại trang phiếu nhập -->
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript" src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+<!-- Tải thư viện jQuery cho các tương tác JavaScript -->
+
+<script type="text/javascript">
+    function calculateTotalPrice(element) {
+        // Hàm tính thành tiền khi người dùng thay đổi giá, số lượng, chiết khấu
+        var row = $(element).closest('.product-entry-row');  // Lấy dòng sản phẩm chứa trường đang thay đổi
+        var price = parseFloat($(row).find('.price').val()) || 0;  // Lấy giá, mặc định là 0 nếu không phải số
+        var quantity = parseFloat($(row).find('.quantity').val()) || 0;  // Lấy số lượng, mặc định là 0 nếu không phải số
+        var discount = parseFloat($(row).find('.discount').val()) || 0;  // Lấy chiết khấu, mặc định là 0 nếu không phải số
+        var totalPrice = price * quantity * (1 - (discount / 100));  // Tính thành tiền
+        $(row).find('.totalprice').val(totalPrice.toFixed(2));  // Hiển thị thành tiền
+        $(row).find('input[type="hidden"][name$="-thanh_tien"]').val(totalPrice.toFixed(2));  // Lưu thành tiền vào input ẩn
+    }
+
+    $(document).ready(function() {
+        $('.add-form-row').click(function() {
+            // Thêm sản phẩm mới vào bảng khi nhấn nút "Thêm Sản Phẩm"
+            var form_idx = $('#id_form-TOTAL_FORMS').val();  // Lấy số lượng form hiện tại
+            var newForm = $('.product-entry-row:first').clone(false, false);  // Sao chép dòng sản phẩm đầu tiên
+            newForm.find(':input').each(function() {
+                // Cập nhật id và name của các trường để tránh trùng lặp
+                var $input = $(this);
+                var oldId = $input.attr('id');
+                if (oldId) {
+                    var newId = oldId.replace(/-\d+-/, '-' + form_idx + '-');
+                    $input.attr('id', newId);
+                }
+                var oldName = $input.attr('name');
+                if (oldName) {
+                    var newName = oldName.replace(/-\d+-/, '-' + form_idx + '-');
+                    $input.attr('name', newName);
+                }
+                $input.val('');  // Đặt lại giá trị các trường
+                if ($input.hasClass('totalprice')) {
+                    $input.val('0');  // Đặt giá trị mặc định cho trường thành tiền
+                }
+            });
+            $('#product-rows').append(newForm);  // Thêm dòng sản phẩm mới vào bảng
+            $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);  // Cập nhật số lượng form
+        });
+
+        $(document).on('click', '.remove-form-row', function() {
+            // Xóa một dòng sản phẩm
+            if ($('.product-entry-row').length > 1) {
+                $(this).closest('.product-entry-row').remove();  // Xóa dòng hiện tại
+            } else {
+                alert('Không thể xóa dòng cuối cùng.');  // Nếu chỉ còn 1 dòng, không thể xóa
+            }
+        });
+
+        $(document).on('input', '.quantity, .price, .discount', function() {
+            calculateTotalPrice(this);  // Tính lại thành tiền khi thay đổi giá trị
+        });
+    });
+</script>
+
+{% endblock content %}

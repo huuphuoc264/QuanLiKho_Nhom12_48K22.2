@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %} Danh sách nhà cung cấp {% endblock title %}
+
+{% block content %}
+
+    <div class="container mt-5">
+        <!-- Tiêu đề chính và nút "Thêm NCC mới" -->
+        <div class="row align-items-center mb-4">
+            <div class="col-md-8">
+                <h2 class="page-title">Danh sách nhà cung cấp</h2>
+            </div>
+            <div class="col-md-4 d-flex justify-content-end">
+                <a class="custom-btn-next btn-sm" href="{% url 'nhacungcap-them-moi' %}">
+                    <i class="fas fa-plus-circle"></i> Thêm NCC mới
+                </a>
+            </div>
+        </div>
+
+        <!-- Bảng danh sách nhà cung cấp -->
+        <div class="table-responsive">
+            <table class="table table-css table-hover table-bordered">
+                <thead class="thead-dark text-center align-middle">
+                    <tr>
+                        <th width="25%">Tên nhà cung cấp</th>
+                        <th width="20%">SĐT</th>
+                        <th width="25%">Email</th>
+                        <th width="30%">Hành động</th>
+                    </tr>
+                </thead>
+
+                {% if object_list %}
+                    <tbody>
+                        {% for nha_cung_cap in object_list %}
+                        <tr>
+                            <td class="align-middle">
+                                <a href="{% url 'nhacungcap-chi-tiet' nha_cung_cap.ten %}" class="fw-bold">{{ nha_cung_cap.ten }}</a>
+                            </td>
+                            <td class="align-middle text-center"> {{ nha_cung_cap.so_dien_thoai }} </td>
+                            <td class="align-middle text-center"> {{ nha_cung_cap.email }} </td>
+                            <td class="align-middle text-center">
+                                <div class="d-flex justify-content-center gap-2 button-spacing">
+                                    <a href="{% url 'nhacungcap-chinh-sua' nha_cung_cap.pk %}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-edit"></i> Chỉnh sửa
+                                    </a>
+                                    <a href="{% url 'nhacungcap-xoa' nha_cung_cap.pk %}" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i> Xóa NCC
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân trang -->
+            <div class="text-center mt-4">
+                {% if is_paginated %}
+                    {% if page_obj.has_previous %}
+                        <a class="btn btn-outline-info mb-4" href="?page=1">
+                            <i class="fas fa-angle-double-left"></i> Đầu tiên
+                        </a>
+                        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">
+                            <i class="fas fa-angle-left"></i> Trước
+                        </a>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">
+                            Tiếp theo <i class="fas fa-angle-right"></i>
+                        </a>
+                        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">
+                            Cuối cùng <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% else %}
+            <!-- Thông báo không có dữ liệu -->
+            <div class="alert alert-warning text-center mt-5" role="alert">
+                Không có dữ liệu. Vui lòng thêm nhà cung cấp.
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}
+    {% if object %}
+        Chỉnh Sửa Nhà Cung Cấp
+    {% else %}
+        Thêm Nhà Cung Cấp Mới
+    {% endif %}
+{% endblock title %}
+
+{% block content %}
+
+    <div class="container mt-5">
+        <!-- Tiêu đề chính của trang -->
+        <div class="text-center mb-5">
+            <h2 class="page-title">
+                {% if object %}
+                    Chỉnh Sửa Nhà Cung Cấp
+                {% else %}
+                    Thêm Nhà Cung Cấp Mới
+                {% endif %}
+            </h2>
+        </div>
+
+        <!-- Form thêm hoặc chỉnh sửa nhà cung cấp -->
+        <div class="form-container">
+            <form method="post" class="shadow-sm p-4 rounded bg-white">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <!-- Tên Nhà Cung Cấp -->
+                <div class="form-group mb-4">
+                    {{ form.ten.errors }}
+                    <label for="{{ form.ten.id_for_label }}" class="form-label">Tên Nhà Cung Cấp:</label>
+                    {{ form.ten|add_class:"form-control" }}
+                </div>
+
+                <!-- Số Điện Thoại và Email -->
+                <div class="row">
+                    <div class="col-md-6 form-group mb-4">
+                        {{ form.so_dien_thoai.errors }}
+                        <label for="{{ form.so_dien_thoai.id_for_label }}" class="form-label">Số Điện Thoại:</label>
+                        {{ form.so_dien_thoai|add_class:"form-control" }}
+                    </div>
+                    <div class="col-md-6 form-group mb-4">
+                        {{ form.email.errors }}
+                        <label for="{{ form.email.id_for_label }}" class="form-label">Email:</label>
+                        {{ form.email|add_class:"form-control" }}
+                    </div>
+                </div>
+
+                <!-- Địa Chỉ Nhà Cung Cấp -->
+                <div class="form-group mb-4">
+                    {{ form.dia_chi.errors }}
+                    <label for="{{ form.dia_chi.id_for_label }}" class="form-label">Địa Chỉ:</label>
+                    {{ form.dia_chi|add_class:"form-control" }}
+                </div>
+
+                <!-- Các nút điều khiển -->
+                <div class="text-center mt-5 d-flex justify-content-center gap-3">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-save me-1"></i>
+                        {% if object %}
+                            Cập Nhật
+                        {% else %}
+                            Lưu
+                        {% endif %}
+                    </button>
+
+                    {% if object %}
+                        <a href="{% url 'nhacungcap-xoa' object.pk %}" class="btn btn-danger btn-lg">
+                            <i class="fas fa-trash me-1"></i> Xóa Nhà Cung Cấp
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'danh-sach-nha-cung-cap' %}" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-times me-1"></i> Hủy Bỏ
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}

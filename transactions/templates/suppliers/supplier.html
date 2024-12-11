@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Hồ sơ Nhà Cung Cấp: {{ nhacungcap.ten }}
+{% endblock title %}
+
+{% block content %}
+
+<div class="content-section p-4 shadow-sm rounded" style="background-color: #ffffff;">
+    <!-- Phần tiêu đề nhà cung cấp -->
+    <div class="row">
+        <div class="col-md-12">
+            <h2 style="color:#575757; font-weight: bold;" class="account-heading">{{ nhacungcap.ten }}</h2>
+        </div>
+    </div>
+
+    <!-- Phần chi tiết nhà cung cấp và nút chỉnh sửa thông tin -->
+    <div class="row mt-4 align-items-start">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <span class="font-weight-bold" style="font-size: 1.1rem;">Liên Hệ:</span> {{ nhacungcap.so_dien_thoai }}
+            </div>
+            <div class="mb-3">
+                <span class="font-weight-bold" style="font-size: 1.1rem;">Email:</span> {{ nhacungcap.email }}
+            </div>
+        </div>
+        <div class="col-md-6 d-flex justify-content-between">
+            <div>
+                <div class="mb-3">
+                    <span class="font-weight-bold" style="font-size: 1.1rem;">Địa Chỉ:</span> {{ nhacungcap.dia_chi|linebreaks }}
+                </div>
+            </div>
+            <div class="align-self-start">
+                <a href="{% url 'nhacungcap-chinh-sua' nhacungcap.pk %}" class="custom-btn-next btn-sm">
+                    <i class="fas fa-edit"></i> Chỉnh Sửa Thông Tin
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bảng Phiếu Nhập -->
+<div class="table-responsive mt-5">
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark align-middle text-center">
+            <tr>
+                <th class="text-center" width="10%">Số Phiếu Nhập</th>
+                <th class="text-center" width="15%">Tên Hàng Hóa</th>
+                <th class="text-center" width="15%">Số Lượng</th>
+                <th class="text-center" width="15%">Tổng Giá Nhập</th>
+                <th class="text-center" width="15%">Ngày Nhập</th>
+                <th class="text-center" width="15%">Hành Động</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for phieunhap in phieu_nhap %}
+            <tr>
+                <td class="align-middle text-center">{{ phieunhap.so_phieu }}</td>
+                <td class="align-middle">
+                    {% for item in phieunhap.lay_danh_sach_san_pham %}
+                        - {{ item.ton_kho.ten }} <br>
+                    {% endfor %}
+                </td>
+                <td class="align-middle text-center">
+                    {% for item in phieunhap.lay_danh_sach_san_pham %}
+                        {{ item.so_luong }} <br>
+                    {% endfor %}
+                </td>
+                <td class="align-middle text-center">{{ phieunhap.tong_gia_tri|floatformat:0 }}₫</td>
+                <td class="align-middle text-center">{{ phieunhap.thoi_gian|date:"d/m/Y" }}</td>
+                <td class="align-middle text-center">
+                    <div class="button-spacing d-flex justify-content-center gap-2">
+                        <a href="{% url 'phieu-nhap-xem' phieunhap.so_phieu %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-eye"></i> Xem
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center" style="font-weight: bold;">Không có bản ghi nào. Vui lòng thêm một số phiếu nhập.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Phân trang -->
+<div class="align-middle mt-4">
+    {% if phieu_nhap.has_other_pages %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if phieu_nhap.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="Trang Đầu">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Trang Đầu</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ phieu_nhap.previous_page_number }}" aria-label="Trang Trước">
+                            <span aria-hidden="true">&lsaquo;</span>
+                            <span class="sr-only">Trang Trước</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for num in phieu_nhap.paginator.page_range %}
+                    {% if phieu_nhap.number == num %}
+                        <li class="page-item active">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% elif num > phieu_nhap.number|add:'-3' and num < phieu_nhap.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if phieu_nhap.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ phieu_nhap.next_page_number }}" aria-label="Trang Tiếp">
+                            <span aria-hidden="true">&rsaquo;</span>
+                            <span class="sr-only">Trang Tiếp</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ phieu_nhap.paginator.num_pages }}" aria-label="Trang Cuối">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Trang Cuối</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+
+{% endblock content %}

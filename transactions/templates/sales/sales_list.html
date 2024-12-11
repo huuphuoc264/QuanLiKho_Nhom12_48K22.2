@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %} Danh Sách Phiếu Xuất Kho {% endblock title %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <!-- Tiêu đề chính và nút "Tạo Phiếu Xuất Mới" -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-8">
+            <h2 class="page-title">Danh Sách Phiếu Xuất</h2>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+            <a class="custom-btn-next btn-sm" href="{% url 'phieu-ban-moi' %}">
+                <i class="fas fa-plus-circle"></i> Tạo Phiếu Xuất Mới
+            </a>
+        </div>
+    </div>
+
+    <!-- Bảng Danh Sách Phiếu Xuất -->
+    <div class="table-responsive">
+        <table class="table table-css table-bordered table-hover text-center">
+            <thead class="thead-dark align-middle">
+                <tr>
+                    <th class="text-center" width="10%">Số Phiếu</th>
+                    <th class="text-center" width="15%">Khách Hàng</th>
+                    <th class="text-center" width="20%">Tên Hàng Hóa</th>
+                    <th class="text-center" width="10%">Số Lượng</th>
+                    <th class="text-center" width="15%">Tổng Giá</th>
+                    <th class="text-center" width="15%">Ngày Xuất</th>
+                    <th class="text-center" width="20%">Hành Động</th>
+                </tr>
+            </thead>
+
+            {% if phieu_ban_list %}
+            <tbody>
+                {% for phieu_ban in phieu_ban_list %}
+                <tr>
+                    <td class="align-middle text-center" >{{ phieu_ban.so_phieu }}</td>
+                    <td class="align-middle text-center">
+                        {{ phieu_ban.ten_nguoi_mua }}<br>
+                        <small style="color: #909494">SĐT: {{ phieu_ban.so_dien_thoai }}</small>
+                    </td>
+                    <td class="align-middle text-center">
+                        {% for item in phieu_ban.phieuban.all %}
+                            - {{ item.ton_kho.ten }} <br>
+                        {% empty %}
+                            Không có sản phẩm
+                        {% endfor %}
+                    </td>
+                    <td class="align-middle text-center">
+                        {% for item in phieu_ban.phieuban.all %}
+                            {{ item.so_luong }} <br>
+                        {% empty %}
+                            -
+                        {% endfor %}
+                    </td>
+                    <td class="align-middle text-center">{{ phieu_ban.tong_gia_tri|floatformat:0 }}₫</td>
+                    <td class="align-middle text-center">{{ phieu_ban.thoi_gian|date:"d/m/Y" }}</td>
+                    <td class="align-middle text-center">
+    <div class="d-flex gap-3 justify-content-center">
+        <a href="{% url 'phieu-ban-xem' phieu_ban.so_phieu %}" class="btn btn-primary btn-sm d-flex align-items-center">
+            <i class="fas fa-eye me-1"></i> Xem
+        </a>
+        <a href="{% url 'phieu-ban-xoa' phieu_ban.pk %}" class="btn btn-danger btn-sm d-flex align-items-center">
+            <i class="fas fa-trash me-1"></i> Xóa
+        </a>
+    </div>
+</td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+
+            <!-- Phân trang -->
+            <div class="text-center mt-4">
+                {% if is_paginated %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1" aria-label="Trang Đầu">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Trang Đầu</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Trang Trước">
+                                        <span aria-hidden="true">&lsaquo;</span>
+                                        <span class="sr-only">Trang Trước</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li class="page-item active">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Trang Tiếp">
+                                        <span aria-hidden="true">&rsaquo;</span>
+                                        <span class="sr-only">Trang Tiếp</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Trang Cuối">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Trang Cuối</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+
+            {% else %}
+            <tbody></tbody>
+            </table>
+
+            <div class="alert alert-warning text-center mt-5">
+                Không có bản ghi nào. Vui lòng thêm một số phiếu bán hàng mới.
+            </div>
+            {% endif %}
+        </div>
+</div>
+{% endblock content %}

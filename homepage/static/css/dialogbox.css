@@ -1,0 +1,113 @@
+/* Overlay to dim the background and make the dialog stand out */
+#dialogoverlay {
+    display: none; /* Đặt trạng thái ban đầu là ẩn overlay */
+    opacity: 0.85; /* Độ mờ của overlay, giúp làm mờ nền nhưng vẫn dễ nhìn */
+    position: fixed; /* Đặt overlay ở vị trí cố định trên màn hình */
+    top: 0; /* Đặt overlay bắt đầu từ vị trí trên cùng */
+    left: 0; /* Đặt overlay bắt đầu từ vị trí bên trái */
+    background: rgba(0, 0, 0, 0.8); /* Nền màu đen mờ, rgba giúp thêm độ trong suốt */
+    width: 100%; /* Đảm bảo overlay phủ toàn bộ chiều rộng của trang */
+    height: 100%; /* Đảm bảo overlay phủ toàn bộ chiều cao của trang */
+    z-index: 9998; /* Đảm bảo overlay nằm phía dưới hộp thoại (z-index thấp hơn hộp thoại) */
+}
+
+/* Main dialog box styling */
+#dialogbox {
+    display: none; /* Ban đầu, hộp thoại không hiển thị */
+    position: fixed; /* Đặt hộp thoại ở vị trí cố định */
+    top: 50%; /* Đặt hộp thoại ở giữa trang theo chiều dọc */
+    left: 50%; /* Đặt hộp thoại ở giữa trang theo chiều ngang */
+    transform: translate(-50%, -50%); /* Đảm bảo hộp thoại được căn giữa chính xác */
+    background: #ffffff; /* Màu nền của hộp thoại là trắng */
+    border-radius: 10px; /* Các góc của hộp thoại được bo tròn với bán kính 10px */
+    width: 500px; /* Đặt chiều rộng cố định cho hộp thoại */
+    max-width: 90%; /* Đảm bảo hộp thoại có thể thu nhỏ trên màn hình nhỏ */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Thêm bóng mờ cho hộp thoại để tạo chiều sâu */
+    z-index: 9999; /* Đảm bảo hộp thoại nằm trên overlay (z-index cao hơn) */
+    overflow: hidden; /* Ẩn các phần tử tràn ra ngoài */
+}
+
+/* Wrapper for each section of the dialog box */
+#dialogbox > div {
+    padding: 20px; /* Tăng padding cho mỗi phần trong hộp thoại để tạo không gian thoáng */
+    border-radius: 10px; /* Các phần trong hộp thoại có góc bo tròn */
+}
+
+/* Dialog header styling */
+#dialogbox > div > #dialogboxhead {
+    background: #ff3c16; /* Màu nền cam tươi cho tiêu đề */
+    font-size: 1.6rem; /* Kích thước font của tiêu đề */
+    padding: 15px; /* Padding cho tiêu đề để tạo không gian */
+    color: #ffffff; /* Màu chữ của tiêu đề là trắng để tạo sự tương phản */
+    font-weight: bold; /* Đặt chữ tiêu đề đậm */
+    text-align: center; /* Căn giữa chữ trong tiêu đề */
+    border-top-left-radius: 10px; /* Bo tròn góc trên bên trái của tiêu đề */
+    border-top-right-radius: 10px; /* Bo tròn góc trên bên phải của tiêu đề */
+}
+
+/* Dialog body styling */
+#dialogbox > div > #dialogboxbody {
+    background: #f8f9fa; /* Nền màu xám sáng cho phần thân để tạo sự nhẹ nhàng */
+    font-size: 1.2rem; /* Kích thước chữ cho nội dung */
+    color: #333333; /* Màu chữ tối để dễ đọc */
+    line-height: 1.6; /* Khoảng cách giữa các dòng chữ */
+    text-align: center; /* Căn giữa nội dung */
+}
+
+/* Dialog footer styling */
+#dialogbox > div > #dialogboxfoot {
+    background: #ffffff; /* Nền trắng cho phần chân hộp thoại */
+    padding: 15px; /* Padding cho phần chân hộp thoại */
+    text-align: right; /* Căn phải cho các nút hành động */
+    border-bottom-left-radius: 10px; /* Bo tròn góc dưới bên trái của phần chân */
+    border-bottom-right-radius: 10px; /* Bo tròn góc dưới bên phải của phần chân */
+}
+
+/* Button styling for dialog actions */
+#dialogboxfoot button {
+    background: #ff3c16; /* Nền cam tươi cho nút */
+    color: #ffffff; /* Chữ trắng cho nút */
+    border: none; /* Loại bỏ viền mặc định */
+    padding: 10px 20px; /* Padding cho nút */
+    font-size: 1rem; /* Kích thước chữ cho nút */
+    font-weight: bold; /* Đặt chữ nút đậm */
+    cursor: pointer; /* Con trỏ chuột biến thành hình bàn tay khi hover */
+    border-radius: 5px; /* Các góc bo tròn cho nút */
+    transition: background 0.3s ease; /* Thêm hiệu ứng khi hover */
+}
+
+#dialogboxfoot button:hover {
+    background: #e03214; /* Màu nền đổi thành cam tối hơn khi hover */
+}
+
+/* Dialog close icon styling */
+#dialogboxhead .close-icon {
+    position: absolute; /* Đặt vị trí của biểu tượng đóng ở góc trên cùng bên phải */
+    top: 15px; /* Đặt biểu tượng cách cạnh trên 15px */
+    right: 15px; /* Đặt biểu tượng cách cạnh phải 15px */
+    color: #ffffff; /* Màu trắng cho biểu tượng */
+    font-size: 1.5rem; /* Kích thước biểu tượng là 1.5rem */
+    cursor: pointer; /* Con trỏ chuột thành hình bàn tay khi hover vào biểu tượng */
+    transition: color 0.3s ease; /* Hiệu ứng chuyển màu mượt mà khi hover */
+}
+
+#dialogboxhead .close-icon:hover {
+    color: #e0e0e0; /* Màu sáng hơn khi hover vào biểu tượng */
+}
+
+/* Smooth fade-in animation for the dialog box */
+@keyframes fadeInDialog {
+    from {
+        opacity: 0; /* Bắt đầu với độ mờ 0 */
+        transform: translate(-50%, -55%); /* Đặt vị trí ban đầu hơi lệch để tạo hiệu ứng */
+    }
+    to {
+        opacity: 1; /* Độ mờ sẽ trở về 100% khi hoạt hình kết thúc */
+        transform: translate(-50%, -50%); /* Đưa vị trí trở lại giữa màn hình */
+    }
+}
+
+/* Add the fade-in animation to the dialog box */
+#dialogbox.fade-in {
+    animation: fadeInDialog 0.5s ease-out forwards; /* Áp dụng hiệu ứng fade-in cho hộp thoại với thời gian 0.5s */
+}

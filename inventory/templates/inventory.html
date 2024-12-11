@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %} DANH SÁCH HÀNG HÓA {% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Tiêu đề chính và nút Thêm mới -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-5">
+            <h2 class="page-title">Danh sách hàng hóa</h2>
+        </div>
+    </div>
+
+    <!-- Tìm kiếm và Lọc -->
+    <div class="row mb-4">
+        <!-- Cột Tìm kiếm -->
+        <div class="col-md-8">
+            <form method="get">
+                <div class="input-group">
+                    <!-- Tìm kiếm theo tên -->
+                    {% render_field filter.form.ten class="form-control textinput" placeholder="Tìm theo tên hàng hóa" %}
+
+                    <!-- Dropdown lọc theo danh mục -->
+                    <select name="danh_muc" class="form-control mx-2">
+                        <option value="">Tất cả danh mục</option>
+                        {% for dm in danh_muc_list %}
+                            <option value="{{ dm.id }}" {% if request.GET.danh_muc == dm.id|stringformat:"s" %}selected{% endif %}>
+                                {{ dm.ten }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Nút tìm kiếm -->
+                    <div class="input-group-append">
+                        <button type="submit" class="btn-search btn-sm">
+                            <i class="fas fa-search"></i> Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Cột Thêm mới -->
+        <div class="col-md-4 d-flex justify-content-end">
+            <a class="custom-btn-next btn-sm" href="{% url 'tonkho-them-moi' %}">
+                <i class="fas fa-plus-circle"></i> Thêm mới
+            </a>
+        </div>
+    </div>
+
+    <!-- Bảng Danh Sách Hàng Hóa -->
+    <div class="table-responsive">
+        <table class="table table-css table-bordered table-hover">
+            <thead class="thead-dark align-middle">
+                <tr>
+                    <th width="25%">Tên Hàng Hóa</th>
+                    <th width="25%">Danh mục</th>
+                    <th>Số lượng</th>
+                    <th>Tình trạng</th>
+                    <th width="20%">Hành động</th>
+                </tr>
+            </thead>
+
+            {% if object_list %}
+            <tbody>
+                {% for ton_kho in object_list %}
+                    <tr>
+                        <!-- Thêm liên kết vào tên sản phẩm -->
+                        <td class="align-middle">
+                            <a href="{% url 'hang_hoa_chi_tiet' ton_kho.pk %}" class="text-primary font-weight">
+                                {{ ton_kho.ten }}
+                            </a>
+                        </td>
+                        <td class="align-middle">
+                            {% if ton_kho.danh_muc %}
+                                {{ ton_kho.danh_muc.ten }}
+                            {% else %}
+                                Không có danh mục
+                            {% endif %}
+                        </td>
+                        <td class="align-middle">{{ ton_kho.so_luong }}</td>
+                        <td class="align-middle">
+                            {% if ton_kho.so_luong > 0 %}
+                                {% if ton_kho.han_su_dung and ton_kho.han_su_dung < today %}
+                                    <span class="badge badge-warning">Hết hạn</span>
+                                {% else %}
+                                    <span class="badge badge-success">Còn hàng</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge badge-danger">Hết hàng</span>
+                            {% endif %}
+                        </td>
+                        <td class="align-middle text-center">
+                            <a href="{% url 'tonkho-chinh-sua' ton_kho.pk %}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> Chỉnh sửa</a>
+                            <a href="{% url 'tonkho-xoa' ton_kho.pk %}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Xóa</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tổng số lượng hàng hóa -->
+    <div class="mt-3 text-center">
+        <p class="font-weight-bold">Tổng số lượng hàng hóa: <strong>{{ object_list|length }}</strong></p>
+    </div>
+
+    <!-- Phân trang -->
+    <div class="text-center mt-4">
+        {% if is_paginated %}
+            {% if page_obj.has_previous %}
+                <a class="btn btn-outline-info mb-4" href="?page=1"><i class="fas fa-angle-double-left"></i> Đầu tiên</a>
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}"><i class="fas fa-angle-left"></i> Trang trước</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Trang tiếp <i class="fas fa-angle-right"></i></a>
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng <i class="fas fa-angle-double-right"></i></a>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% else %}
+    <tbody></tbody>
+    </table>
+
+    <!-- Khi không có dữ liệu -->
+    <div class="text-center mt-5" style="color: #575757; font-weight: bold; font-size: 1.5rem;">
+        Danh sách này trống. Hãy thêm hàng hóa.
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

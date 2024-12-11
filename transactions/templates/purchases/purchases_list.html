@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %} Danh Sách Phiếu Nhập {% endblock title %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <!-- Tiêu đề chính và nút "Phiếu Nhập Mới" -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-8">
+            <h2 class="page-title">Danh Sách Phiếu Nhập</h2>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+            <a class="custom-btn-next btn-sm" href="{% url 'chon-nhacungcap' %}">
+                <i class="fas fa-plus-circle"></i> Phiếu Nhập Mới
+            </a>
+        </div>
+    </div>
+
+    <!-- Bảng Danh Sách Phiếu Nhập -->
+    <div class="table-responsive">
+        <table class="table table-css table-bordered table-hover">
+            <thead class="thead-dark align-middle">
+                <tr class="text-center"> <!-- Đảm bảo toàn bộ hàng tiêu đề căn giữa -->
+                    <th class="text-center" width="10%">Số Phiếu</th>
+                    <th class="text-center" width="15%">Nhà Cung Cấp</th>
+                    <th class="text-center" width="20%">Hàng Hóa Đã Nhập</th>
+                    <th class="text-center" width="10%">Số Lượng Nhập</th>
+                    <th class="text-center" width="15%">Tổng Giá Nhập</th>
+                    <th class="text-center" width="10%">Ngày Nhập</th>
+                    <th class="text-center" width="10%">Hành Động</th>
+                </tr>
+            </thead>
+
+            {% if phieu_nhap_list.exists %}
+            <tbody>
+                {% for phieu_nhap in phieu_nhap_list %}
+                <tr>
+                    <td class="align-middle text-center">{{ phieu_nhap.so_phieu }}</td>
+                    <td class="align-middle text-center">
+                        {% if phieu_nhap.nha_cung_cap.da_xoa %}
+                            {{ phieu_nhap.nha_cung_cap.ten }}
+                        {% else %}
+                            <a href="{% url 'nhacungcap-chi-tiet' phieu_nhap.nha_cung_cap.ten %}">{{ phieu_nhap.nha_cung_cap.ten }}</a>
+                        {% endif %}
+                        <br>
+                        <small style="color: #909494">SĐT: {{ phieu_nhap.nha_cung_cap.so_dien_thoai }}</small>
+                    </td>
+                    <td class="align-middle">
+                        {% for item in phieu_nhap.lay_danh_sach_san_pham %}
+                           - {{ item.ton_kho.ten }} <br>
+                        {% endfor %}
+                    </td>
+                    <td class="align-middle text-center">
+                        {% for item in phieu_nhap.lay_danh_sach_san_pham %}
+                            {{ item.so_luong }} <br>
+                        {% endfor %}
+                    </td>
+                    <td class="align-middle text-center">{{ phieu_nhap.tong_gia_tri|floatformat:0 }}₫</td>
+                    <td class="align-middle text-center">{{ phieu_nhap.thoi_gian|date:"d/m/Y" }}</td>
+                    <td class="align-middle text-center">
+                        <div class="d-flex justify-content-center button-spacing">
+                            <a href="{% url 'phieu-nhap-xem' phieu_nhap.so_phieu %}" class="btn btn-primary btn-sm d-flex align-items-center me-2">
+                                <i class="fas fa-eye me-1"></i> Xem
+                            </a>
+                            <a href="{% url 'phieu-nhap-xoa' phieu_nhap.pk %}" class="btn btn-danger btn-sm d-flex align-items-center">
+                                <i class="fas fa-trash me-1"></i> Xóa
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% else %}
+            <tbody>
+                <tr>
+                    <td colspan="7" class="text-center" style="font-weight: bold;">Không có bản ghi nào. Vui lòng thêm một số phiếu nhập.</td>
+                </tr>
+            </tbody>
+            {% endif %}
+        </table>
+    </div>
+
+    <!-- Phân trang -->
+    <div class="text-center mt-4">
+        {% if is_paginated %}
+            {% if page_obj.has_previous %}
+                <a class="btn btn-outline-info mb-4" href="?page=1">
+                    <i class="fas fa-angle-double-left"></i> Trang Đầu
+                </a>
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">
+                    <i class="fas fa-angle-left"></i> Trang Trước
+                </a>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">
+                    Trang Tiếp <i class="fas fa-angle-right"></i>
+                </a>
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">
+                    Trang Cuối <i class="fas fa-angle-double-right"></i>
+                </a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}

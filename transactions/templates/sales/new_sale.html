@@ -1,0 +1,176 @@
+{% extends "base.html" %}  <!-- Kế thừa từ template cơ bản 'base.html' để sử dụng cấu trúc và các phần chung của trang -->
+{% load static %}  <!-- Tải thư viện static của Django để có thể sử dụng các tài nguyên tĩnh như hình ảnh, CSS, JavaScript -->
+{% load widget_tweaks %}  <!-- Tải thư viện widget_tweaks để có thể sử dụng các filter như 'add_class' trong form -->
+
+{% block title %} Phiếu Xuất Kho {% endblock title %}  <!-- Đoạn này định nghĩa tiêu đề của trang, sẽ được thay thế vào block title trong base.html -->
+
+{% block content %}  <!-- Bắt đầu block content, phần nội dung chính của trang -->
+
+<div class="container mt-4" style="max-width: 1100px;">
+    <!-- Khởi tạo một div chứa với các class Bootstrap và giới hạn chiều rộng của nó -->
+
+    <!-- Tiêu đề chính -->
+    <div class="text-center mb-4">
+        <h2 class="page-title" style="font-size: 2rem;">Phiếu Xuất Kho</h2>
+        <!-- Tiêu đề trang với font-size là 2rem -->
+    </div>
+
+    <div class="card shadow-sm p-3 mb-4" style="border-radius: 8px;">
+        <!-- Tạo một thẻ card với bóng đổ và padding xung quanh nội dung -->
+
+        <!-- Thông tin khách hàng -->
+        <div class="content-section mb-4">
+            <h5 class="text-primary mb-3" style="font-size: 1.4rem;">Thông Tin Khách Hàng</h5>
+            <!-- Tiêu đề cho phần thông tin khách hàng, có màu chữ 'text-primary' và kích thước font là 1.4rem -->
+
+            <form method="post">
+                {% csrf_token %}  <!-- CSRF token bảo vệ form khỏi các cuộc tấn công CSRF -->
+                {{ form.non_field_errors }}  <!-- Hiển thị các lỗi không liên quan đến các trường cụ thể trong form -->
+
+                <!-- Trường nhập tên khách hàng -->
+                <div class="form-group mb-3">
+                    {{ form.ten_nguoi_mua.errors }}  <!-- Hiển thị lỗi nếu có đối với trường 'ten_nguoi_mua' -->
+                    <label for="{{ form.ten_nguoi_mua.id_for_label }}" class="form-label">Tên Khách Hàng:</label>
+                    {{ form.ten_nguoi_mua|add_class:"form-control form-control-md" }}  <!-- Hiển thị trường tên khách hàng với class CSS -->
+                </div>
+
+                <div class="form-row">
+                    <!-- Các trường số điện thoại và email -->
+                    <div class="form-group col-md-6 mb-3">
+                        {{ form.so_dien_thoai.errors }}  <!-- Hiển thị lỗi nếu có đối với trường 'so_dien_thoai' -->
+                        <label for="{{ form.so_dien_thoai.id_for_label }}" class="form-label">Số Điện Thoại:</label>
+                        {{ form.so_dien_thoai|add_class:"form-control form-control-md" }}  <!-- Hiển thị trường số điện thoại -->
+                    </div>
+
+                    <div class="form-group col-md-6 mb-3">
+                        {{ form.email.errors }}  <!-- Hiển thị lỗi nếu có đối với trường 'email' -->
+                        <label for="{{ form.email.id_for_label }}" class="form-label">Email:</label>
+                        {{ form.email|add_class:"form-control form-control-md" }}  <!-- Hiển thị trường email -->
+                    </div>
+                </div>
+
+                <!-- Trường nhập địa chỉ -->
+                <div class="form-group mb-3">
+                    {{ form.dia_chi.errors }}  <!-- Hiển thị lỗi nếu có đối với trường 'dia_chi' -->
+                    <label for="{{ form.dia_chi.id_for_label }}" class="form-label">Địa Chỉ:</label>
+                    {{ form.dia_chi|add_class:"form-control form-control-md" }}  <!-- Hiển thị trường địa chỉ -->
+                </div>
+
+                <!-- Phần chi tiết sản phẩm -->
+                {{ formset.management_form }}  <!-- Hiển thị các thông tin quản lý formset (bao gồm tổng số form hiện tại) -->
+                <div class="content-section mb-4">
+                    <h5 class="text-primary mb-3" style="font-size: 1.4rem;">Thông tin hàng hóa</h5>
+                    <!-- Tiêu đề cho phần chi tiết sản phẩm -->
+
+                    <div class="table-responsive">
+                        <!-- Bảng hiển thị chi tiết các sản phẩm -->
+                        <table class="table table-css table-hover table-bordered">
+                            <thead class="thead-dark">
+                                <!-- Đầu bảng với các cột: sản phẩm, đơn giá, số lượng, chiết khấu, thành tiền, hành động -->
+                                <tr>
+                                    <th class="text-center">Sản Phẩm</th>
+                                    <th class="text-center">Đơn Giá</th>
+                                    <th class="text-center">Số Lượng</th>
+                                    <th class="text-center">Chiết Khấu %</th>
+                                    <th class="text-center">Thành Tiền</th>
+                                    <th class="text-center">Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="product-rows">
+                                {% for form in formset %}
+                                <!-- Lặp qua các form trong formset để hiển thị các dòng sản phẩm -->
+                                <tr class="product-entry-row">
+                                    <!-- Hiển thị các trường thông tin của sản phẩm -->
+                                    <td>{{ form.ton_kho|add_class:"form-control form-control-md" }}</td>
+                                    <td>{{ form.don_gia|add_class:"form-control form-control-md price" }}</td>
+                                    <td>{{ form.so_luong|add_class:"form-control form-control-md quantity" }}</td>
+                                    <td>{{ form.phan_tram_chiet_khau|add_class:"form-control form-control-md discount" }}</td>
+                                    <td>
+                                        <input type="hidden" name="{{ form.thanh_tien.html_name }}" value="{{ form.thanh_tien.value|default_if_none:"0" }}">
+                                        <input type="text" class="form-control form-control-md totalprice" value="{{ form.thanh_tien.value|default_if_none:"0" }}" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-danger btn-md remove-form-row">Xóa</button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="text-end mt-2">
+                        <!-- Nút thêm sản phẩm -->
+                        <button type="button" class="btn btn-outline-primary btn-md add-form-row">+ Thêm Sản Phẩm</button>
+                    </div>
+                </div>
+
+                <!-- Nút điều khiển dưới cùng -->
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button type="submit" class="custom-btn-next">Thêm Vào Phiếu Bán <i class="fas fa-save"></i></button>
+                    <!-- Nút submit để thêm vào phiếu bán -->
+                    <a href="{% url 'phieu-ban' %}" class="custom-btn-cancel">Hủy Bỏ <i class="fas fa-times"></i></a>
+                    <!-- Link quay lại trang phiếu bán -->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Tải thư viện jQuery -->
+<script type="text/javascript" src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+
+<script type="text/javascript">
+    function calculateTotalPrice(element) {
+        // Hàm tính thành tiền khi người dùng thay đổi giá, số lượng hoặc chiết khấu
+        var row = $(element).closest('.product-entry-row');  // Lấy dòng sản phẩm chứa trường đang thay đổi
+        var price = parseFloat($(row).find('.price').val()) || 0;  // Lấy giá sản phẩm
+        var quantity = parseFloat($(row).find('.quantity').val()) || 0;  // Lấy số lượng
+        var discount = parseFloat($(row).find('.discount').val()) || 0;  // Lấy chiết khấu
+        var totalPrice = price * quantity * (1 - (discount / 100));  // Tính thành tiền
+        $(row).find('.totalprice').val(totalPrice.toFixed(2));  // Hiển thị thành tiền trong trường tương ứng
+        $(row).find('input[type="hidden"][name$="-thanh_tien"]').val(totalPrice.toFixed(2));  // Lưu thành tiền vào trường ẩn
+    }
+
+    $(document).ready(function() {
+        $('.add-form-row').click(function() {
+            // Thêm sản phẩm mới vào bảng khi nhấn nút "Thêm Sản Phẩm"
+            var form_idx = $('#id_form-TOTAL_FORMS').val();  // Lấy số lượng form hiện tại
+            var newForm = $('.product-entry-row:first').clone(false, false);  // Sao chép dòng sản phẩm đầu tiên
+            newForm.find(':input').each(function() {
+                // Cập nhật id và name của các trường để tránh trùng lặp
+                var $input = $(this);
+                var oldId = $input.attr('id');
+                if (oldId) {
+                    var newId = oldId.replace(/-\d+-/, '-' + form_idx + '-');
+                    $input.attr('id', newId);
+                }
+                var oldName = $input.attr('name');
+                if (oldName) {
+                    var newName = oldName.replace(/-\d+-/, '-' + form_idx + '-');
+                    $input.attr('name', newName);
+                }
+                $input.val('');  // Đặt lại giá trị các trường
+                if ($input.hasClass('totalprice')) {
+                    $input.val('0');  // Đặt giá trị mặc định cho trường thành tiền
+                }
+            });
+            $('#product-rows').append(newForm);  // Thêm dòng sản phẩm mới vào bảng
+            $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);  // Cập nhật số lượng form
+        });
+
+        $(document).on('click', '.remove-form-row', function() {
+            // Xóa một dòng sản phẩm
+            if ($('.product-entry-row').length > 1) {
+                $(this).closest('.product-entry-row').remove();  // Xóa dòng hiện tại
+            } else {
+                alert('Không thể xóa dòng cuối cùng.');  // Nếu chỉ còn 1 dòng, không thể xóa
+            }
+        });
+
+        $(document).on('input', '.quantity, .price, .discount', function() {
+            calculateTotalPrice(this);  // Tính lại thành tiền khi thay đổi giá trị
+        });
+    });
+</script>
+</div>
+{% endblock content %}

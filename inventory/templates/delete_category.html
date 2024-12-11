@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Xóa Danh Mục{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h2>Xóa Danh Mục</h2>
+        </div>
+        <div class="card-body">
+            <h4>Bạn có chắc chắn muốn xóa danh mục "{{ object.ten }}"?</h4> <!-- Thay đổi từ 'object.name' thành 'object.ten' -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-danger">Có, Xóa</button>
+                    <a href="{% url 'danhmuc' %}" class="btn btn-secondary">Hủy</a> <!-- Thay đổi URL từ 'categories' thành 'danhmuc' -->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

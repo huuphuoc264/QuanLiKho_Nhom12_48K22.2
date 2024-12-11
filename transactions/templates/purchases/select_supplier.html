@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %} Chọn Nhà Cung Cấp Cho Phiếu Nhập Mới {% endblock title %}
+
+{% block content %}
+
+    <!-- Tiêu đề chính -->
+    <div class="page-title">
+        Nhập Kho Mới - Chọn Nhà Cung Cấp
+    </div>
+
+    <form method="post" class="form-container">
+        {% csrf_token %}
+
+        <!-- Lặp qua các trường trong form và render -->
+        {% for field in form.visible_fields %}
+            <div class="form-group mb-4">
+                <!-- Thay đổi nhãn của trường cho phù hợp -->
+                {% if field.label == "nha cung cap" %}
+                    <label for="{{ field.id_for_label }}" class="form-label fw-bold">Nhà Cung Cấp</label>
+                {% else %}
+                    <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
+                {% endif %}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="text-danger mt-2">
+                        {% for error in field.errors %}
+                            <small>{{ error }}</small><br>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <!-- Nút điều khiển -->
+        <div class="d-flex justify-content-center mt-5 gap-3">
+            <button type="submit" class="btn custom-btn-next me-3">
+                Tiếp Theo <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+            <a href="{% url 'phieu-nhap' %}" class="btn custom-btn-cancel">
+                Hủy <i class="fas fa-times ms-2"></i>
+            </a>
+        </div>
+
+    </form>
+
+{% endblock content %}

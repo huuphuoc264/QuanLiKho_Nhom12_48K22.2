@@ -1,0 +1,265 @@
+/* Import Inter from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* Đoạn mã này dùng để tải font chữ "Inter" từ Google Fonts. Các trọng số (weights) 300, 400, 500, 600, 700 được sử dụng để chọn các độ đậm khác nhau của font. */
+
+/* Thiết lập font và màu sắc cho toàn trang */
+body, html {
+  height: 100%; /* Đặt chiều cao của body và html là 100% để đảm bảo chiều cao đầy đủ của trang */
+  font-family: 'Inter', sans-serif; /* Cài đặt font chữ mặc định cho trang là 'Inter' từ Google Fonts */
+  line-height: 1.6; /* Căn chỉnh chiều cao dòng (line-height) cho dễ đọc */
+  background-color: #f7f8fc !important; /* Màu nền của trang là một màu xám nhạt */
+  color: #333; /* Màu chữ của trang là màu xám đậm (dễ đọc) */
+  margin: 0; /* Loại bỏ khoảng cách mặc định từ trình duyệt */
+  padding: 0; /* Loại bỏ khoảng cách mặc định từ trình duyệt */
+}
+
+/* Kiểu dáng cho các tiêu đề (headings) */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', sans-serif; /* Đặt font chữ cho tất cả các tiêu đề */
+  color: #333333; /* Màu chữ là xám đậm */
+  margin-bottom: 1rem; /* Khoảng cách dưới của các tiêu đề là 1rem */
+}
+
+h1 {
+  font-size: 2.0rem; /* Kích thước font cho h1 là 2.5rem (lớn nhất) */
+  font-weight: 500; /* Đặt độ đậm của font cho h1 là bold (700) */
+}
+
+h2, h3, h4 {
+  font-weight: 500; /* Độ đậm font của h2, h3, h4 là semi-bold (500) */
+}
+
+/* Kiểu dáng chung cho các phần tử form */
+.form-group {
+  color: #444; /* Màu chữ là xám vừa (không quá đậm) */
+  margin-bottom: 15px; /* Khoảng cách dưới cho mỗi nhóm form là 15px */
+}
+
+label {
+  color: #333; /* Màu chữ của các nhãn (label) là xám đậm */
+  font-size: 1.1rem; /* Kích thước font cho nhãn là 1.1rem */
+  font-weight: 500; /* Độ đậm của font là medium (500) */
+}
+
+/* Kiểu dáng breadcrumb (dẫn hướng) */
+.breadcrumb {
+  background-color: #4e6570; /* Nền của breadcrumb có màu xám xanh */
+  color: #55b159; /* Màu chữ của breadcrumb là màu xanh lá cây */
+  padding: 8px 15px; /* Padding cho breadcrumb là 8px ở trên dưới và 15px trái phải */
+  border-radius: 8px; /* Các góc của breadcrumb được bo tròn với bán kính 8px */
+}
+
+.breadcrumb-item {
+  color: #f7f8fc; /* Màu chữ cho các mục breadcrumb là màu trắng sáng */
+}
+
+.breadcrumb-item.active {
+  color: #d1d1d1; /* Màu chữ của mục đang hoạt động (active) là màu xám sáng */
+}
+
+/* Kiểu dáng liên kết (links) */
+a {
+  color: #007bff; /* Màu chữ của liên kết là xanh dương */
+  text-decoration: none; /* Loại bỏ gạch chân mặc định của liên kết */
+  transition: color 0.2s ease; /* Thêm hiệu ứng chuyển màu khi hover */
+}
+
+a:hover {
+  color: #0056b3; /* Màu chữ khi hover (di chuột qua) sẽ đổi thành xanh dương đậm */
+}
+
+/* Kiểu dáng cho navbar (thanh điều hướng) */
+.navbar-collapse > .navbar-nav {
+  background-color: #333; /* Nền của navbar có màu xám tối */
+  padding: 15px; /* Padding cho navbar là 15px */
+  border-radius: 8px; /* Các góc của navbar được bo tròn với bán kính 8px */
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db; /* Màu chữ của các liên kết trong navbar là màu xám sáng */
+  transition: color 0.3s ease; /* Thêm hiệu ứng chuyển màu khi hover */
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #007bff; /* Màu chữ khi hover (di chuột qua) sẽ đổi thành xanh dương */
+  font-weight: bold; /* Khi hover, chữ sẽ trở nên đậm */
+}
+
+/* Kiểu dáng dropdown menu (menu thả xuống) */
+.dropdown-menu {
+  background-color: #2c2c2c; /* Nền màu xám tối cho menu thả xuống */
+  color: #fff; /* Màu chữ của menu là trắng */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng nhẹ cho menu */
+  border-radius: 5px; /* Các góc của menu được bo tròn với bán kính 5px */
+}
+
+.dropdown-item {
+  color: #ddd; /* Màu chữ cho mỗi mục trong dropdown là xám sáng */
+  padding: 10px 20px; /* Padding cho các mục trong dropdown */
+}
+
+.dropdown-item:hover {
+  background-color: #444; /* Khi hover vào mục dropdown, nền sẽ đổi thành xám đậm */
+  color: #fff; /* Màu chữ khi hover là trắng */
+}
+
+/* Kiểu dáng các nút */
+.button,
+.ghost-button {
+  color: #fff; /* Màu chữ của các nút là trắng */
+  background-color: #007bff; /* Nền nút là xanh dương */
+  padding: 10px 20px; /* Padding của nút */
+  border: none; /* Không viền cho nút */
+  border-radius: 5px; /* Các góc của nút được bo tròn với bán kính 5px */
+  font-size: 1rem; /* Kích thước font của nút */
+  font-weight: 600; /* Độ đậm font của nút là semi-bold */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Thêm hiệu ứng khi hover */
+  cursor: pointer; /* Con trỏ chuột sẽ biến thành hình bàn tay khi hover vào nút */
+  text-align: center; /* Căn giữa nội dung trong nút */
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.1); /* Thêm bóng nhẹ cho nút */
+}
+
+.ghost-button:hover,
+.ghost-button:active {
+  background-color: #0056b3; /* Khi hover hoặc khi active, nền sẽ tối hơn */
+  transform: translateY(-2px); /* Nút sẽ nhấc lên nhẹ khi hover hoặc active */
+}
+
+/* Kiểu dáng input text */
+.textinput, .emailinput {
+  background-color: #ffffff; /* Nền của input là trắng */
+  color: #333; /* Màu chữ của input là xám đậm */
+  padding: 8px; /* Padding cho input */
+  border: 1px solid #ccc; /* Viền của input là xám nhạt */
+  border-radius: 5px; /* Các góc của input được bo tròn */
+  width: 100%; /* Input sẽ có chiều rộng 100% */
+  transition: border-color 0.3s ease; /* Thêm hiệu ứng khi border màu thay đổi */
+}
+
+.textinput:focus, .emailinput:focus {
+  border-color: #007bff; /* Khi input được chọn (focus), viền sẽ chuyển sang màu xanh dương */
+  outline: none; /* Loại bỏ viền outline khi focus */
+}
+
+.textinput:disabled {
+  background-color: #f0f0f0; /* Khi input bị vô hiệu hóa, nền sẽ chuyển sang màu xám nhạt */
+}
+
+/* Hiệu ứng các phần tử khác */
+#particles-js canvas {
+  display: block; /* Canvas sẽ hiển thị dưới dạng khối */
+  transform: scale(1); /* Giữ nguyên tỷ lệ hình */
+  opacity: 1; /* Đảm bảo độ mờ của canvas là 100% */
+  transition: opacity 0.8s ease, transform 1.4s ease; /* Thêm hiệu ứng chuyển đổi opacity và scale */
+}
+
+#particles-js {
+  background: #080901; /* Nền của particles-js có màu đen tối */
+  width: 100%; /* Đảm bảo canvas chiếm toàn bộ chiều rộng */
+  height: 100%; /* Đảm bảo canvas chiếm toàn bộ chiều cao */
+  position: fixed; /* Đặt canvas ở vị trí cố định */
+  z-index: -10; /* Đặt canvas phía sau các phần tử khác */
+  top: 0; /* Đặt canvas ở trên cùng của trang */
+  left: 0; /* Đặt canvas ở bên trái của trang */
+}
+
+/* Kiểu dáng bảng (table) */
+.table-css {
+  width: 100%; /* Bảng chiếm toàn bộ chiều rộng */
+  border-collapse: collapse; /* Các ô bảng sẽ gắn kết với nhau */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Thêm bóng nhẹ cho bảng */
+}
+
+.table-css th, .table-css td {
+  padding: 12px; /* Padding cho các ô bảng */
+  border-bottom: 1px solid #ddd; /* Viền dưới màu xám nhạt */
+  text-align: left; /* Căn trái nội dung trong các ô bảng */
+}
+
+.table-css th {
+  background-color: #f1f1f1; /* Nền của tiêu đề bảng có màu xám sáng */
+  font-weight: bold; /* Đặt độ đậm của chữ trong tiêu đề bảng */
+}
+
+/* Điều chỉnh lại font cho các phần tử */
+body, h1, h2, h3, h4, h5, h6, p, a, li, button {
+  font-family: 'Inter', sans-serif; /* Đảm bảo font 'Inter' được áp dụng cho tất cả các phần tử */
+}
+
+/* Tiêu đề chính của trang */
+.page-title {
+    color: #1ABC9C; /* Màu chữ cho tiêu đề chính là xanh lá cây sáng */
+    font-weight: bold; /* Đặt độ đậm của chữ là bold */
+    font-size: 2.0rem; /* Kích thước font là 2.5rem */
+    display: inline-block; /* Đảm bảo tiêu đề không chiếm hết dòng */
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
+
+/* Form container */
+.form-container {
+    width: 60%; /* Chiều rộng của form là 60% */
+    max-width: 700px; /* Đặt chiều rộng tối đa là 700px */
+    margin: auto; /* Căn giữa form */
+    background-color: #ffffff; /* Nền của form là trắng */
+    padding: 2rem 3rem; /* Padding cho form */
+    border-radius: 10px; /* Bo tròn các góc của form */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Đổ bóng cho form */
+}
+
+/* Form Label Styling */
+.form-label {
+    font-weight: bold; /* Đặt độ đậm của chữ cho nhãn là bold */
+    font-size: 1.1rem; /* Kích thước chữ cho nhãn */
+}
+
+/* Nút "Tiếp Theo" - Xanh, hiện đại với đổ bóng và hiệu ứng hover */
+.custom-btn-next {
+    background-color: #28a745; /* Màu xanh cho nút tiếp theo */
+    border: none; /* Không viền cho nút */
+    color: #ffffff; /* Màu chữ trắng */
+    font-size: 1.0rem; /* Kích thước chữ */
+    padding: 4px 4px; /* Padding cho nút */
+    border-radius: 6px; /* Bo góc tròn cho nút */
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2); /* Đổ bóng cho nút */
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s; /* Hiệu ứng khi hover */
+}
+
+.custom-btn-next:hover {
+    background-color: #218838; /* Màu khi hover vào */
+    box-shadow: 0 6px 12px rgba(33, 136, 56, 0.3); /* Đổ bóng mạnh hơn khi hover */
+    transform: translateY(-3px); /* Nhấc nhẹ nút lên khi hover */
+}
+
+/* Nút "Hủy" - Đỏ, sắc nét để người dùng nhận biết */
+.custom-btn-cancel {
+    background-color: #dc3545; /* Màu đỏ cho nút hủy */
+    border: none; /* Không viền cho nút */
+    color: #ffffff; /* Màu chữ trắng */
+    font-size: 1.0rem; /* Kích thước chữ */
+    padding: 12px 24px; /* Padding cho nút */
+    border-radius: 8px; /* Bo góc tròn cho nút */
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.2); /* Đổ bóng cho nút */
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s; /* Hiệu ứng khi hover */
+}
+
+.custom-btn-cancel:hover {
+    background-color: #c82333; /* Màu khi hover vào */
+    box-shadow: 0 8px 16px rgba(200, 35, 51, 0.3); /* Đổ bóng mạnh hơn khi hover */
+    transform: translateY(-3px); /* Nhấc nhẹ nút lên khi hover */
+}
+
+/* Khoảng cách giữa các nút */
+.gap-3 {
+    gap: 15px; /* Khoảng cách giữa các nút */
+}
+
+.btn-filter:hover {
+    background-color: #138496; /* Màu khi hover vào */
+    box-shadow: 0 6px 12px rgba(19, 132, 150, 0.3); /* Đổ bóng mạnh hơn khi hover */
+    transform: translateY(-3px); /* Nhấc nhẹ nút lên khi hover */
+}
+
+/* Khoảng cách giữa các nút */
+.button-spacing {
+    gap: 15px; /* Bạn có thể điều chỉnh giá trị này để có khoảng cách phù hợp */
+}

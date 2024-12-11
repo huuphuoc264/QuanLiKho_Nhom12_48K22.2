@@ -1,0 +1,211 @@
+{% extends "base.html" %}  <!-- Kế thừa từ template cơ bản "base.html" -->
+{% load static %}  <!-- Tải thư viện static để sử dụng các tệp tĩnh (CSS, JS, hình ảnh) -->
+
+{% block title %} Dashboard {% endblock title %}  <!-- Đặt tiêu đề của trang web trong phần header -->
+
+{% block content %}
+    <!-- CSS nội bộ để điều chỉnh chiều cao cho biểu đồ -->
+    <style>
+        #bieu_do_xu_huong_xuat_kho, #bieu_do_san_pham_ban_chay {
+            height: 300px;  /* Tăng chiều cao của biểu đồ */
+            width: 100%;  /* Chiều rộng biểu đồ sẽ chiếm toàn bộ chiều rộng của container */
+        }
+    </style>
+
+    <div class="container-fluid p-3">  <!-- Khởi tạo một container chứa toàn bộ nội dung của dashboard -->
+        <div class="row mb-3">
+            <div class="col-md-12 text-center">  <!-- Căn giữa các phần tử trong cột -->
+                <h1 class="text-primary" style="font-size: 2.5rem; font-weight: bold">Dashboard</h1>  <!-- Tiêu đề chính -->
+                <p class="text-muted lead" style="font-size: 1.25rem;">Tổng quan về hoạt động xuất kho và nhập kho</p>  <!-- Mô tả phụ -->
+            </div>
+        </div>
+        
+        <!-- Tạo các thẻ thống kê (cards) để hiển thị thông tin -->
+        <div class="row text-center">
+            <!-- Thẻ thống kê số lượng phiếu xuất -->
+            <div class="col-md-3">
+                <div class="card shadow-sm mb-3" style="border-radius: 10px; height: 180px;">
+                    <div class="card-header text-white bg-primary py-2" style="border-radius: 10px 10px 0 0;">
+                        <i class="fas fa-truck fa-lg"></i>  <!-- Icon cho phiếu xuất -->
+                        <h5 class="my-1" style="font-size: 1.1rem;">Tổng Số Phiếu Xuất</h5>
+                    </div>
+                    <div class="card-body py-2 d-flex flex-column justify-content-center">
+                        <h3 class="card-title text-dark">{{ tong_so_phieu_xuat }}</h3>  <!-- Hiển thị số lượng phiếu xuất -->
+                        <p class="card-text text-dark" style="font-size: 0.9rem;">Phiếu xuất hàng</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tương tự cho các thẻ thống kê khác -->
+            <div class="col-md-3">
+                <div class="card shadow-sm mb-3" style="border-radius: 10px; height: 180px;">
+                    <div class="card-header text-white bg-success py-2" style="border-radius: 10px 10px 0 0;">
+                        <i class="fas fa-warehouse fa-lg"></i>
+                        <h5 class="my-1" style="font-size: 1.1rem;">Tổng Số Phiếu Nhập</h5>
+                    </div>
+                    <div class="card-body py-2 d-flex flex-column justify-content-center">
+                        <h3 class="card-title text-dark">{{ tong_so_phieu_nhap }}</h3>  <!-- Hiển thị số lượng phiếu nhập -->
+                        <p class="card-text text-dark" style="font-size: 0.9rem;">Phiếu nhập kho</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm mb-3" style="border-radius: 10px; height: 180px;">
+                    <div class="card-header text-white bg-warning py-2" style="border-radius: 10px 10px 0 0;">
+                        <i class="fas fa-dollar-sign fa-lg"></i>
+                        <h5 class="my-1" style="font-size: 1.1rem;">Tổng Doanh Thu</h5>
+                    </div>
+                    <div class="card-body py-2 d-flex flex-column justify-content-center">
+                        <h3 class="card-title text-dark">{{ tong_doanh_thu|floatformat:0 }} ₫</h3>  <!-- Hiển thị tổng doanh thu -->
+                        <p class="card-text text-dark" style="font-size: 0.9rem;">Tổng doanh thu từ bán hàng</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm mb-3" style="border-radius: 10px; height: 180px;">
+                    <div class="card-header text-white bg-danger py-2" style="border-radius: 10px 10px 0 0;">
+                        <i class="fas fa-fire fa-lg"></i>
+                        <h5 class="my-1" style="font-size: 1.1rem;">Sản Phẩm Bán Chạy Nhất</h5>
+                    </div>
+                    <div class="card-body py-2 d-flex flex-column justify-content-center">
+                        <h3 class="card-title text-dark">{{ san_pham_ban_chay_nhat }}</h3>  <!-- Hiển thị sản phẩm bán chạy nhất -->
+                        <p class="card-text text-dark" style="font-size: 0.9rem;">Sản phẩm bán chạy</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tạo các biểu đồ -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-3" style="border-radius: 10px;">
+                    <div class="card-header bg-info text-white py-2" style="border-radius: 10px 10px 0 0;">
+                        <h5 class="my-1" style="font-size: 1.1rem;">Xu Hướng Xuất Kho Trong Tháng</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="bieu_do_xu_huong_xuat_kho"></canvas>  <!-- Biểu đồ xu hướng xuất kho -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-3" style="border-radius: 10px;">
+                    <div class="card-header bg-info text-white py-2" style="border-radius: 10px 10px 0 0;">
+                        <h5 class="my-1" style="font-size: 1.1rem;">Tổng Quan Sản Phẩm Bán Chạy</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="bieu_do_san_pham_ban_chay"></canvas>  <!-- Biểu đồ sản phẩm bán chạy -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tải các thư viện Chart.js và FontAwesome -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let ngayXuHuong = {{ ngay_xu_huong_xuat_kho|safe }};   <!-- Dữ liệu ngày cho biểu đồ xu hướng xuất kho -->
+            let giaTriXuHuong = {{ gia_tri_xu_huong_xuat_kho|safe }};  <!-- Dữ liệu giá trị cho biểu đồ xu hướng xuất kho -->
+            let nhanSanPhamBanChay = {{ nhan_san_pham_ban_chay|safe }};  <!-- Dữ liệu tên sản phẩm bán chạy -->
+            let giaTriSanPhamBanChay = {{ gia_tri_san_pham_ban_chay|safe }};  <!-- Dữ liệu giá trị sản phẩm bán chạy -->
+
+            if (ngayXuHuong && giaTriXuHuong && ngayXuHuong.length > 0 && giaTriXuHuong.length > 0) {
+                // Vẽ biểu đồ xu hướng xuất kho
+                var ctxLine = document.getElementById('bieu_do_xu_huong_xuat_kho').getContext('2d');
+                var lineChart = new Chart(ctxLine, {
+                    type: 'line',  // Kiểu biểu đồ: line (đường)
+                    data: {
+                        labels: ngayXuHuong,  // Các nhãn trên trục x (ngày)
+                        datasets: [{
+                            label: 'Xuất Kho',  // Chú thích biểu đồ
+                            data: giaTriXuHuong,  // Dữ liệu cho trục y (số lượng xuất kho)
+                            borderColor: 'rgba(54, 162, 235, 1)',  // Màu đường biều đồ
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',  // Màu nền dưới đường
+                            borderWidth: 2,  // Độ dày đường
+                            fill: true,  // Làm nền có màu
+                            tension: 0.4,  // Độ cong của đường
+                            pointBackgroundColor: 'rgba(54, 162, 235, 1)',  // Màu điểm dữ liệu
+                            pointRadius: 4,  // Kích thước điểm
+                            pointHoverRadius: 6,  // Kích thước khi hover
+                        }]
+                    },
+                    options: {
+                        responsive: true,  // Biểu đồ thay đổi kích thước khi thay đổi kích thước cửa sổ
+                        maintainAspectRatio: false,  // Không giữ tỷ lệ cố định
+                        scales: {
+                            x: {  // Trục x
+                                title: { display: true, text: 'Ngày' },  // Tiêu đề trục x
+                                ticks: { maxRotation: 0, autoSkip: true }
+                            },
+                            y: {  // Trục y
+                                beginAtZero: true,  // Bắt đầu từ 0
+                                title: { display: true, text: 'Số Lượng' },
+                                ticks: { callback: function(value) { return value.toLocaleString(); } }  // Định dạng số liệu
+                            }
+                        },
+                        plugins: {
+                            legend: { position: 'top' },  // Vị trí chú thích
+                            tooltip: {  // Cấu hình tooltip khi hover vào dữ liệu
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        return tooltipItem.raw.toLocaleString() + " đơn vị";  // Hiển thị số liệu
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            if (nhanSanPhamBanChay && giaTriSanPhamBanChay && nhanSanPhamBanChay.length > 0 && giaTriSanPhamBanChay.length > 0) {
+                // Vẽ biểu đồ sản phẩm bán chạy
+                var ctxBar = document.getElementById('bieu_do_san_pham_ban_chay').getContext('2d');
+                var barChart = new Chart(ctxBar, {
+                    type: 'bar',  // Kiểu biểu đồ: bar (cột)
+                    data: {
+                        labels: nhanSanPhamBanChay,  // Nhãn cho trục x (sản phẩm)
+                        datasets: [{
+                            label: 'Số Lượng Bán',
+                            data: giaTriSanPhamBanChay,  // Số lượng bán cho trục y
+                            backgroundColor: 'rgba(255,0,7,0.6)',  // Màu nền cột
+                            borderColor: 'rgba(255,99,99,0.78)',  // Màu viền cột
+                            borderWidth: 2,
+                            hoverBackgroundColor: 'rgba(255,99,159,0.78)',  // Màu khi hover
+                            borderRadius: 10  // Bo góc cột
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: { display: true, text: 'Sản Phẩm' },
+                                ticks: { maxRotation: 45, autoSkip: true }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Số Lượng Bán' },
+                                ticks: { callback: function(value) { return value.toLocaleString(); } }
+                            }
+                        },
+                        plugins: {
+                            legend: { position: 'top' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        return tooltipItem.raw.toLocaleString() + " sản phẩm";  // Hiển thị tooltip khi hover
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock content %}

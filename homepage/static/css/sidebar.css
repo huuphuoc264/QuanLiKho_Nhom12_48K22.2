@@ -1,0 +1,126 @@
+/* Wrapper and Sidebar Container */
+#wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+}
+
+#sidebar {
+  width: 230px; /* Cập nhật chiều rộng sidebar là 230px */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh; /* Sidebar chiếm toàn bộ chiều cao */
+  z-index: 999;
+  background: #2C3E50; /* Nền tối */
+  color: #ffffff; /* Văn bản màu trắng */
+  transition: all 0.4s ease-in-out; /* Hiệu ứng mượt */
+  border-right: 1px solid #34495E; /* Đường viền nhẹ nhàng */
+}
+
+.sidebar.active {
+  margin-left: -230px; /* Ẩn sidebar với độ rộng 230px */
+}
+
+/* Sidebar Header Styling */
+.sidebar-header {
+  padding: 15px; /* Căn chỉnh padding để phù hợp với kích thước */
+  background: #1F2A35; /* Màu nền tối hơn cho tiêu đề */
+  text-align: center;
+  border-bottom: 1px solid #34495E; /* Đường phân tách dưới header */
+  font-size: 1em; /* Giảm kích thước font */
+  font-weight: 600;
+}
+
+.logo {
+  width: 120px; /* Điều chỉnh lại kích thước logo */
+  height: auto;
+  margin-bottom: 8px;
+}
+
+/* Sidebar Button Styling */
+.sidebar-button {
+  padding: 10px 15px; /* Khoảng cách nội dung cho nút */
+  font-size: 0.85em; /* Kích thước chữ gọn gàng */
+  display: flex;
+  align-items: center; /* Canh giữa icon và chữ */
+  color: #ffffff; /* Văn bản màu trắng */
+  border-radius: 6px; /* Bo tròn các góc nút */
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease; /* Hiệu ứng mượt */
+  margin: 5px 0;
+}
+
+.sidebar-button i {
+  margin-right: 10px; /* Thêm khoảng cách giữa icon và text */
+}
+
+.sidebar-button:hover {
+  color: #ffffff; /* Văn bản vẫn màu trắng khi hover */
+  background: #1ABC9C; /* Màu nền sáng hơn khi hover */
+  transform: translateX(5px); /* Hiệu ứng chuyển nhẹ sang bên phải */
+}
+
+/* Sidebar Subitem Styling */
+.sidebar-subitem {
+  font-size: 0.8em !important; /* Kích thước chữ nhỏ hơn */
+  padding-left: 25px !important; /* Thụt lề cho mục con */
+  background: #2C3E50; /* Nền tối */
+  color: rgba(255, 255, 255, 0.85); /* Màu trắng nhạt */
+  border-left: 3px solid #1ABC9C; /* Đường viền trái màu xanh nhạt tạo điểm nhấn */
+  margin-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.sidebar-subitem:hover {
+  color: #1ABC9C; /* Màu xanh lục khi hover */
+  background: #34495E; /* Nền đậm hơn */
+}
+
+/* Bottom Left User Information Styling */
+.bottomleft {
+  bottom: 0;
+  position: absolute;
+  width: 100%; /* Chiếm toàn bộ chiều rộng sidebar */
+  padding: 15px; /* Giảm padding để phù hợp */
+  background-color: #34495E; /* Nền tối cho phần thông tin người dùng */
+  border-top: 1px solid #2C3E50; /* Đường viền trên phân tách rõ ràng */
+}
+
+.bottomleft a {
+  text-decoration: none;
+  color: #ffffff; /* Văn bản màu trắng */
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease-in-out;
+  font-size: 0.85em; /* Kích thước chữ nhỏ hơn */
+}
+
+.bottomleft a:hover {
+  color: #1ABC9C; /* Đổi màu xanh khi hover */
+}
+
+/* Content Styling */
+#content {
+  width: 100%;
+  margin-left: 230px; /* Phù hợp với độ rộng sidebar mới */
+  padding: 20px;
+  min-height: 100vh;
+  transition: margin-left 0.4s ease-in-out;
+}
+
+/* Media Queries for Responsive Sidebar */
+@media (max-width: 768px) {
+  #sidebar {
+    margin-left: -230px; /* Thu nhỏ sidebar khi ở màn hình nhỏ */
+  }
+  #sidebar.active {
+    margin-left: 0;
+  }
+  #content {
+    margin-left: 0;
+  }
+  #sidebarCollapse span {
+    display: none;
+  }
+}

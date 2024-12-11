@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Chi Tiết Danh Mục: {{ danh_muc.ten }}
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="content-section p-4 shadow-sm rounded" style="background-color: #ffffff;">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 style="color:#575757; font-weight: bold;" class="account-heading">{{ danh_muc.ten }}</h2>
+                <p>{{ danh_muc.mo_ta }}</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bảng Danh Sách Sản Phẩm (Tồn Kho) -->
+    <div class="table-responsive mt-5">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark align-middle text-center">
+                <tr>
+                    <th class="text-center" width="10%">Mã Sản Phẩm</th>
+                    <th class="text-center" width="25%">Tên Sản Phẩm</th>
+                    <th class="text-center" width="15%">Số Lượng</th>
+                    <th class="text-center" width="15%">Hành Động</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for san_pham in san_pham_list %}
+                <tr>
+                    <td class="align-middle text-center">{{ san_pham.id }}</td>
+                    <td class="align-middle">{{ san_pham.ten }}</td>
+                    <td class="align-middle text-center">{{ san_pham.so_luong }}</td>
+                    <td class="align-middle text-center">
+                        <!-- Link chi tiết sản phẩm -->
+                        <a href="{% url 'tonkho-chinh-sua' san_pham.pk %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Chỉnh Sửa
+                        </a>
+                        <!-- Link xóa sản phẩm -->
+                        <a href="{% url 'tonkho-xoa' san_pham.pk %}" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i> Xóa
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Không có sản phẩm nào trong danh mục này.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
