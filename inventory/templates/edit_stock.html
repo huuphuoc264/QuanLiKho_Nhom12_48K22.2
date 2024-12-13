@@ -39,7 +39,9 @@
                     <label for="{{ form.danh_muc.id_for_label }}" class="form-label">Danh mục</label>
                     {{ form.danh_muc|add_class:"form-control" }}
                 </div>
-
+                <div class="form-group mb-3">
+                {{ form.hinh_anh|add_class:"form-control-file btn btn-secondary"|attr:"id:id_hinh_anh" }}
+            </div>
                 <!-- Nút điều khiển -->
                 <div class="d-flex justify-content-between mt-4">
                     <button type="submit" class="custom-btn-next">
@@ -72,10 +74,6 @@
         </div>
     {% endif %}
 </div>
-
-            <div class="form-group">
-                {{ form.hinh_anh|add_class:"form-control-file btn btn-secondary"|attr:"id:id_hinh_anh" }}
-            </div>
         </div>
     </div>
 </div>
