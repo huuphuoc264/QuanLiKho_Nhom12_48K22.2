@@ -47,6 +47,14 @@ class TonKhoCreateView(SuccessMessageMixin, CreateView):  # Lớp view để t�
         context["savebtn"] = 'Lưu'  # Thêm nhãn nút "Lưu" vào context.
         return context
 
+    def form_valid(self, form):
+        # Debug để kiểm tra file
+        if 'hinh_anh' in self.request.FILES:
+            print("File upload:", self.request.FILES['hinh_anh'])  # Debug
+            form.instance.hinh_anh = self.request.FILES['hinh_anh']
+        return super().form_valid(form)
+
+
 
 class TonKhoUpdateView(SuccessMessageMixin, UpdateView):  # Lớp view để cập nhật thông tin sản phẩm tồn kho.
     model = TonKho  # Mô hình TonKho được sử dụng để cập nhật sản phẩm.
