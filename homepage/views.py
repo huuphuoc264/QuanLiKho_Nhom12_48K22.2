@@ -5,6 +5,8 @@ from transactions.models import PhieuBanHang, PhieuNhapKho, SanPhamBan
 from django.contrib.auth import logout
 from django.db.models import Sum
 import json
+from datetime import datetime, date
+
 # Trang chủ (HomeView)
 class TrangChuView(View):
     template_name = "home.html"
@@ -42,14 +44,27 @@ class TrangChuView(View):
 
         # Xu hướng xuất kho theo ngày
         ngay_xu_huong_xuat_kho = PhieuBanHang.objects.dates('thoi_gian', 'day')
+
+        # Xử lý ngày để đảm bảo kiểu dữ liệu đúng
+        processed_dates = []
+        for ngay in ngay_xu_huong_xuat_kho:
+            if isinstance(ngay, date):
+                processed_dates.append(ngay)
+            elif isinstance(ngay, str):
+                try:
+                    processed_dates.append(datetime.strptime(ngay, '%Y-%m-%d').date())
+                except ValueError:
+                    pass  # Nếu không thể chuyển đổi, bỏ qua giá trị này
+
+        # Tính giá trị xu hướng xuất kho
         gia_tri_xu_huong_xuat_kho = [
-            float(SanPhamBan.objects.filter(phieu__thoi_gian__date=date).aggregate(tong=Sum('thanh_tien'))['tong'] or 0)
-            for date in ngay_xu_huong_xuat_kho
+            float(SanPhamBan.objects.filter(phieu__thoi_gian__date=ngay).aggregate(tong=Sum('thanh_tien'))['tong'] or 0)
+            for ngay in processed_dates
         ]
 
         # Kiểm tra dữ liệu để đảm bảo không bị trống
-        if not ngay_xu_huong_xuat_kho:
-            ngay_xu_huong_xuat_kho = ['N/A']
+        if not processed_dates:
+            processed_dates = ['N/A']
             gia_tri_xu_huong_xuat_kho = [0]
 
         if not san_pham_ban_chay_labels:
@@ -62,7 +77,9 @@ class TrangChuView(View):
             'tong_so_phieu_nhap': tong_so_phieu_nhap,
             'tong_doanh_thu': tong_doanh_thu,
             'san_pham_ban_chay_nhat': san_pham_ban_chay_nhat,
-            'ngay_xu_huong_xuat_kho': json.dumps([date.strftime('%d/%m') for date in ngay_xu_huong_xuat_kho]),
+            'ngay_xu_huong_xuat_kho': json.dumps(
+                [ngay.strftime('%d/%m') if isinstance(ngay, date) else ngay for ngay in processed_dates]
+            ),
             'gia_tri_xu_huong_xuat_kho': json.dumps(gia_tri_xu_huong_xuat_kho),
             'nhan_san_pham_ban_chay': json.dumps(san_pham_ban_chay_labels),
             'gia_tri_san_pham_ban_chay': json.dumps(san_pham_ban_chay_values),
@@ -73,6 +90,7 @@ class TrangChuView(View):
         }
 
         return render(request, self.template_name, context)
+
 
 # Đăng xuất người dùng (CustomLogoutView)
 class DangXuatView(View):
