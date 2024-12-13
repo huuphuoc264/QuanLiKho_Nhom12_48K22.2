@@ -36,4 +36,6 @@ urlpatterns = [
 
     # Các giao dịch liên quan đến nhập kho, bán hàng, nhà cung cấp
     path('giaodich/', include('transactions.urls')),
-] +  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
