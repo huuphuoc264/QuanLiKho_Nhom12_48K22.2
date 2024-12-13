@@ -108,7 +108,7 @@ class PhieuBanHangForm(forms.ModelForm):
         super().__init__(*args, **kwargs)  # Gọi hàm khởi tạo của lớp cha.
         # Thêm thuộc tính CSS và pattern vào trường 'ten_nguoi_mua' để nhập đúng tên.
         self.fields['ten_nguoi_mua'].widget.attrs.update(
-            {'class': 'textinput form-control', 'pattern': '[a-zA-Z\s]{1,50}', 'title': 'Alphabets and Spaces only', 'required': 'true'})
+            {'class': 'textinput form-control',  'required': 'true'})
         # Thêm thuộc tính CSS và pattern vào trường 'so_dien_thoai' để nhập số điện thoại đúng.
         self.fields['so_dien_thoai'].widget.attrs.update(
             {'class': 'textinput form-control', 'maxlength': '10', 'pattern': '[0-9]{10}', 'title': 'Numbers only', 'required': 'true'})
@@ -131,12 +131,6 @@ class PhieuBanHangForm(forms.ModelForm):
 
 # form dùng để thêm sản phẩm bán hàng (SaleItemForm)
 class SanPhamBanForm(forms.ModelForm):
-    hsd_choices = forms.ChoiceField(
-        choices=[],  # Danh sách HSD khởi tạo rỗng
-        required=True,
-        widget=forms.Select(attrs={'class': 'form-control hsd-dropdown'}),
-        label="Hạn sử dụng"
-    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)  # Gọi hàm khởi tạo của lớp cha.
@@ -165,14 +159,6 @@ class SanPhamBanForm(forms.ModelForm):
                 'class': 'textinput form-control setprice discount', 'min': '0', 'max': '100', 'required': 'true'
             })
         )
-
-    def set_hsd_choices(self, hsd_queryset):
-        """
-        Thiết lập danh sách HSD động cho trường 'hsd_choices' dựa trên sản phẩm được chọn.
-        """
-        self.fields['hsd_choices'].choices = [
-            (hsd.id, hsd.han_su_dung.strftime('%d-%m-%Y')) for hsd in hsd_queryset
-        ]
 
     class Meta:
         model = SanPhamBan  # Liên kết form này với model SanPhamBan.

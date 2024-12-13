@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'crispy_forms',                             # uses 'django-crispy-forms' app
     'login_required',
     'crispy_bootstrap5',# uses 'django-login-required-middleware' app
-
     'homepage.apps.HomepageConfig',
     'inventory.apps.InventoryConfig',
     'transactions.apps.TransactionsConfig',
@@ -147,4 +146,3 @@ import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-DATE_INPUT_FORMATS = ['%d-%m-%Y']
